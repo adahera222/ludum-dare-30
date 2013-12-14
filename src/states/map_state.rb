@@ -19,6 +19,12 @@ module YOGO
 
         sprite = @tileset.terrain(tile[:terrain])
         sprite.draw(vx, vy)
+
+        if tile[:resource] then
+          sprite = @tileset.resource(tile[:resource])
+          sprite.draw(vx, vy)
+
+        end
       end
 
       graphics.draw_string("(ESC to exit)", 8, container.height - 30)
@@ -82,7 +88,7 @@ module YOGO
 
       vx = 0
       vy = 0
-       
+
       (viewx - @range_x).upto(viewx + @range_x) do |x|
         (viewy - @range_y).upto(viewy + @range_y) do |y|
           vy += TILE_SIZE

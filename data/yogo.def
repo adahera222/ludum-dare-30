@@ -1,6 +1,6 @@
 yogo.png
 {
-	terrain_0.png
+	resources_0.png
 	2
 	2
 	32
@@ -11,7 +11,7 @@ yogo.png
 	0
 }
 {
-	terrain_1.png
+	resources_1.png
 	36
 	2
 	32
@@ -22,7 +22,7 @@ yogo.png
 	0
 }
 {
-	terrain_2.png
+	resources_2.png
 	70
 	2
 	32
@@ -33,7 +33,7 @@ yogo.png
 	0
 }
 {
-	terrain_3.png
+	resources_3.png
 	2
 	36
 	32
@@ -44,9 +44,97 @@ yogo.png
 	0
 }
 {
+	resources_4.png
+	36
+	36
+	32
+	32
+	0
+	0
+	0
+	0
+}
+{
+	resources_5.png
+	70
+	36
+	32
+	32
+	0
+	0
+	0
+	0
+}
+{
+	resources_6.png
+	2
+	70
+	32
+	32
+	0
+	0
+	0
+	0
+}
+{
+	resources_7.png
+	36
+	70
+	32
+	32
+	0
+	0
+	0
+	0
+}
+{
+	terrain_0.png
+	70
+	70
+	32
+	32
+	0
+	0
+	0
+	0
+}
+{
+	terrain_1.png
+	2
+	104
+	32
+	32
+	0
+	0
+	0
+	0
+}
+{
+	terrain_2.png
+	36
+	104
+	32
+	32
+	0
+	0
+	0
+	0
+}
+{
+	terrain_3.png
+	70
+	104
+	32
+	32
+	0
+	0
+	0
+	0
+}
+{
 	terrain_4.png
-	36
-	36
+	2
+	138
 	32
 	32
 	0
