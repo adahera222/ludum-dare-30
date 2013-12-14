@@ -10,7 +10,7 @@ module YOGO
       TERRAIN_COLORS = { :water => Color.new(14, 53, 75, 255),
                          :grass => Color.new(69, 145, 26, 255),
                          :hills => Color.new(27, 52, 43, 255),
-                         :mountaints => Color.new(79, 79, 79, 255),
+                         :mountains => Color.new(79, 79, 79, 255),
                          :swamp => Color.new(30, 85, 55, 255)
       }
 
