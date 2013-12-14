@@ -17,7 +17,10 @@ module YOGO
 
     def initialize(pos)
       @pos = pos
-      @data = { :height => 0.0 }
+      @data = { :height => 0.0,
+                :water_pollution => 0.0,
+                :air_pollution => 0.0
+      }
     end
 
     def x

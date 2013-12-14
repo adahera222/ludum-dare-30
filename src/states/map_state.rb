@@ -64,7 +64,6 @@ module YOGO
       container.exit if input.is_key_down(Input::KEY_ESCAPE)
 
       @ui_handler.update(container, delta)
-      @world.update(container, delta)
 
       if input.is_key_down(Input::KEY_W)
         unless @view_y - SCROLL_SPEED < @range_y
@@ -248,6 +247,16 @@ module YOGO
     def render_tile(tile, vx, vy)
       sprite = @tileset.terrain(tile[:terrain])
       sprite.draw(vx, vy)
+
+      if tile[:water_pollution] > 0.05 then
+        sprite = @tileset.ui(:water_pollution)
+        sprite.draw(vx, vy, Color.new(1.0,1.0,1.0, tile[:water_pollution]))
+      end
+
+      if tile[:air_pollution] > 0.05 then
+        sprite = @tileset.ui(:air_pollution)
+        sprite.draw(vx, vy, Color.new(1.0,1.0,1.0, tile[:air_pollution]))
+      end
 
       if tile[:resource] then
         sprite = @tileset.resource(tile[:resource])
