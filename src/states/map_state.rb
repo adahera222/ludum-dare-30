@@ -162,13 +162,12 @@ module YOGO
 
       @map_min_x.upto(@map_max_x) do |x|
         @map_min_y.upto(@map_max_y) do |y|
-          vy += TILE_SIZE
-
           pos = [x,y]
           tile = @map[pos]
           next if tile.nil?
 
           @viewport[tile] = [vx, vy]
+          vy += TILE_SIZE
         end
         vy = 0
         vx += TILE_SIZE
