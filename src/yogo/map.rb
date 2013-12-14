@@ -66,12 +66,12 @@ module YOGO
               if Kernel::rand >= r.to_f/max_radius
                 tiles[pos] = true
                 tile = self[pos]
-                if tile[:terrain] == :land then
+                if tile[:terrain] == :grass then
                   tile[:terrain] = :hills
                 elsif tile[:terrain] == :hills then
-                  tile[:terrain] = :mountain
+                  tile[:terrain] = :mountains
                 else
-                  tile[:terrain] = :land
+                  tile[:terrain] = :grass
                 end
               end
             end

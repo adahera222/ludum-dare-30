@@ -1,6 +1,5 @@
 java_import org.newdawn.slick.state.BasicGameState
 java_import org.newdawn.slick.Color
-java_import org.newdawn.slick.PackedSpriteSheet
 java_import org.newdawn.slick.fills.GradientFill
 java_import org.newdawn.slick.geom.Rectangle
 
@@ -18,16 +17,8 @@ module YOGO
       viewport.each do |tile, vpos|
         vx,vy = vpos
 
-        if tile[:terrain] == :land then
-          graphics.set_color(Color.new(0.0,1.0,0.0,1.0))
-        elsif tile[:terrain] == :hills then
-          graphics.set_color(Color.new(0.0,0.5,0.0,1.0))
-        elsif tile[:terrain] == :mountain then
-          graphics.set_color(Color.new(0.5,0.5,0.5,1.0))
-        else
-          graphics.set_color(Color.new(0,0,1.0,1.0))
-        end
-        graphics.fill_rect(vx, vy, TILE_SIZE, TILE_SIZE)
+        sprite = @tileset.terrain(tile[:terrain])
+        sprite.draw(vx, vy)
       end
 
       graphics.draw_string("(ESC to exit)", 8, container.height - 30)
@@ -36,6 +27,7 @@ module YOGO
     def init(container, game)
       @game = game
       @ui_handler = game.ui_handler
+      @tileset = @ui_handler.tileset
       @world = game.world
       @map = @world.map
 

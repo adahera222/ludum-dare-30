@@ -15,7 +15,7 @@ java_import org.newdawn.slick.AppGameContainer
 
 require 'states/map_state'
 require 'yogo/world'
-require 'yogo/ui_handler'
+require 'yogo/ui/handler'
 
 module YOGO
   class Game < StateBasedGame
@@ -23,7 +23,7 @@ module YOGO
     attr_reader :world, :ui_handler
 
     def initialize(name)
-      @ui_handler = UIHandler.new
+      @ui_handler = UI::Handler.new
 
       @world = World.new
       @world.ui_handler = @ui_handler
