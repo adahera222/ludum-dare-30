@@ -3,6 +3,8 @@ require 'yogo/tile'
 module YOGO
   class Map
 
+    attr_reader :maxx, :maxy
+
     def initialize(width, height)
       @maxx = width - 1
       @maxy = height - 1
