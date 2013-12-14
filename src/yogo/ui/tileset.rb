@@ -6,7 +6,8 @@ module YOGO
 
       TERRAIN = [ :water, :grass, :hills, :mountains, :swamp ]
       RESOURCES = [ :oil, :coal, :iron, :uranium, :aluminum, :fish, :arable, :blank ]
-      STRUCTURES = [ :mine, :power_station, :factory ]
+      STRUCTURES = [ :mine, :power_station, :factory, :well, :farm, :fishing_fleet, :platform, :plantation, :wind_farm, :solar_farm, :nuclear_plant, :dock ]
+      UI = [ :selected, :production, :power ]
 
       TERRAIN_COLORS = { :water => Color.new(14, 53, 75, 255),
                          :grass => Color.new(69, 145, 26, 255),
@@ -43,10 +44,12 @@ module YOGO
         end
 
         STRUCTURES.each_with_index do |name, idx|
-          @tiles[:structure][name] = @sheet.get_sprite("structures_#{idx}.png")
+          @tiles[:structure][name] = @sheet.get_sprite("structures_#{sprintf('%02d', idx)}.png")
         end
 
-        @tiles[:ui][:selected] = @sheet.get_sprite("ui_0.png")
+        UI.each_with_index do |name, idx|
+          @tiles[:ui][name] = @sheet.get_sprite("ui_#{sprintf('%01d', idx)}.png")
+        end
       end
 
       def terrain(type)
@@ -59,6 +62,10 @@ module YOGO
 
       def structure(type)
         @tiles[:structure][type] || @tiles[:resource][:blank]
+      end
+
+      def ui(type)
+        @tiles[:ui][type]
       end
 
       def terrain_color(type)
@@ -74,7 +81,7 @@ module YOGO
       end
 
       def selected
-        @tiles[:ui][:selected]
+        ui(:selected)
       end
 
     end
