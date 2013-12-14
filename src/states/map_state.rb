@@ -253,11 +253,6 @@ module YOGO
         sprite.draw(vx, vy, Color.new(1.0,1.0,1.0, tile[:water_pollution]))
       end
 
-      if tile[:air_pollution] > 0.05 then
-        sprite = @tileset.ui(:air_pollution)
-        sprite.draw(vx, vy, Color.new(1.0,1.0,1.0, tile[:air_pollution]))
-      end
-
       if tile[:resource] then
         sprite = @tileset.resource(tile[:resource])
         sprite.draw(vx, vy)
@@ -266,6 +261,11 @@ module YOGO
       if tile[:structure] then
         sprite = @tileset.structure(tile[:structure].type)
         sprite.draw(vx, vy)
+      end
+
+      if tile[:air_pollution] > 0.05 then
+        sprite = @tileset.ui(:air_pollution)
+        sprite.draw(vx, vy, Color.new(1.0,1.0,1.0, tile[:air_pollution]))
       end
     end
 
