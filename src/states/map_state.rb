@@ -279,16 +279,30 @@ module YOGO
       tile_buffer = Image.new(TILE_SIZE, TILE_SIZE)
       graphics.copy_area(tile_buffer, data_x, data_y)
 
-      # Draw out the structures we can construct here
-      @current_selected.valid_structures.each_with_index do |type, idx|
+      if @current_selected[:structure].nil? then
+        # Draw out the structures we can construct here
+        @current_selected.valid_structures.each_with_index do |type, idx|
+          vx = buttons_x
+          vy = buttons_y + (idx * (TILE_SIZE + 5))
+
+          key = KEYS.find { |k, s| s.include?(type) }
+
+          tile_buffer.draw(vx, vy)
+          @tileset.structure(type).draw(vx, vy)
+          graphics.draw_string("(#{key[0]}) #{Structure.name(type)}", vx + 5 + TILE_SIZE, vy)
+        end
+      else
+        # Show the structure details
+        structure = @current_selected[:structure]
+
         vx = buttons_x
-        vy = buttons_y + (idx * (TILE_SIZE + 5))
+        vy = buttons_y
 
-        key = KEYS.find { |k, s| s.include?(type) }
+        structure.production.each do |item, quantity|
+          graphics.draw_string("Produces #{quantity} #{item}", vx, vy)
+          vy += 15
+        end
 
-        tile_buffer.draw(vx, vy)
-        @tileset.structure(type).draw(vx, vy)
-        graphics.draw_string("(#{key[0]}) #{Structure.name(type)}", vx + 5 + TILE_SIZE, vy)
       end
 
     end
