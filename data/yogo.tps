@@ -173,6 +173,7 @@
         <array>
             <filename>terrain</filename>
             <filename>resources</filename>
+            <filename>ui</filename>
         </array>
         <key>ignoreFileList</key>
         <array/>

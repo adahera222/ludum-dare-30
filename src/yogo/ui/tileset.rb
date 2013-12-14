@@ -28,7 +28,8 @@ module YOGO
         @sheet = PackedSpriteSheet.new("data/yogo.def")
         @tiles = {
           :terrain => {},
-          :resource => {}
+          :resource => {},
+          :ui => {}
         }
 
         TERRAIN.each_with_index do |name, idx|
@@ -38,6 +39,8 @@ module YOGO
         RESOURCES.each_with_index do |name, idx|
           @tiles[:resource][name] = @sheet.get_sprite("resources_#{idx}.png")
         end
+
+        @tiles[:ui][:selected] = @sheet.get_sprite("ui_0.png")
       end
 
       def terrain(type)
@@ -54,6 +57,10 @@ module YOGO
 
       def resource_color(type)
         RESOURCE_COLORS[type] || RESOURCE_COLORS[:blank]
+      end
+
+      def selected
+        @tiles[:ui][:selected]
       end
 
     end
