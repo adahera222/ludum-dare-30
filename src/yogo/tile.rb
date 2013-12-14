@@ -5,7 +5,7 @@ module YOGO
 
     def initialize(pos)
       @pos = pos
-      @data = {}
+      @data = { :height => 0.0 }
     end
 
     def x

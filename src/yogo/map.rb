@@ -33,8 +33,6 @@ module YOGO
   private
 
     def random!
-      # TODO: Generate random plates and give them a height
-      # TODO: Where two plates overlap, decide if it's a +1 or a -1
       generate_tectonic_plates
 
       # TODO: Scatter resources randomly on the map
@@ -44,6 +42,8 @@ module YOGO
       # TODO: Rainfall on regions will produce rivers flowing ever lower
     end
 
+    # TODO: Generate random plates and give them a height
+    # TODO: Where two plates overlap, decide if it's a +1 or a -1
     def generate_tectonic_plates
       10.times do
         candidates = { }

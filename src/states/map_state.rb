@@ -18,8 +18,12 @@ module YOGO
       viewport.each do |tile, vpos|
         vx,vy = vpos
 
-        h = (tile[:height].to_f + 1.0) / 16.0
-        graphics.set_color(Color.new(h,h,h,1.0))
+        if tile[:height] > 1.0 then
+          h = (tile[:height] + 1.0) / 16.0
+          graphics.set_color(Color.new(h,h,h,1.0))
+        else
+          graphics.set_color(Color.new(0,0,1.0,1.0))
+        end
         graphics.fill_rect(vx, vy, TILE_SIZE, TILE_SIZE)
       end
 
