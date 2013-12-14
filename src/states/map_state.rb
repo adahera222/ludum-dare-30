@@ -7,7 +7,8 @@ java_import org.newdawn.slick.geom.Rectangle
 module YOGO
   class MapState < BasicGameState
 
-    TILE_SIZE = 32
+    TILE_SIZE = 48
+    SCROLL_SPEED = 0.25
 
     def getID
       1
@@ -33,8 +34,8 @@ module YOGO
       @screen_x = container.width
       @screen_y = container.height
 
-      @view_x = (@world.map.width / 2).floor
-      @view_y = (@world.map.height / 2).floor
+      @view_x = (@world.map.width / 2.0)
+      @view_y = (@world.map.height / 2.0)
 
       @range_x = ((@screen_x / TILE_SIZE) / 2).floor
       @range_y = ((@screen_y / TILE_SIZE) / 2).floor
@@ -46,6 +47,20 @@ module YOGO
 
       @ui_handler.update(container, delta)
       @world.update(container, delta)
+
+      if input.is_key_down(Input::KEY_W)
+        @view_y -= SCROLL_SPEED
+        reset_viewport
+      elsif input.is_key_down(Input::KEY_S)
+        @view_y += SCROLL_SPEED
+        reset_viewport
+      elsif input.is_key_down(Input::KEY_A)
+        @view_x -= SCROLL_SPEED
+        reset_viewport
+      elsif input.is_key_down(Input::KEY_D)
+        @view_x += SCROLL_SPEED
+        reset_viewport
+      end
     end
 
     def mouseClicked(button, x, y, count)
@@ -53,16 +68,23 @@ module YOGO
 
   private
 
+    def reset_viewport
+      @viewport = nil
+    end
+
     def viewport
       return @viewport if @viewport
 
       @viewport = {}
 
+      viewx = @view_x.floor
+      viewy = @view_y.floor
+
       vx = 0
       vy = 0
        
-      (@view_x - @range_x).upto(@view_x + @range_x) do |x|
-        (@view_y - @range_y).upto(@view_y + @range_y) do |y|
+      (viewx - @range_x).upto(viewx + @range_x) do |x|
+        (viewy - @range_y).upto(viewy + @range_y) do |y|
           vy += TILE_SIZE
 
           pos = [x,y]
