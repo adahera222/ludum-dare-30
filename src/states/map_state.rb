@@ -7,7 +7,7 @@ java_import org.newdawn.slick.geom.Rectangle
 module YOGO
   class MapState < BasicGameState
 
-    TILE_SIZE = 6
+    TILE_SIZE = 32
     SCROLL_SPEED = 0.25
 
     def getID
