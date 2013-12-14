@@ -113,17 +113,25 @@ module YOGO
       @world.update(container, delta)
 
       if input.is_key_down(Input::KEY_W)
-        @view_y -= SCROLL_SPEED
-        reset_viewport
+        unless @view_y - SCROLL_SPEED < (@range_y - 1)
+          @view_y -= SCROLL_SPEED
+          reset_viewport
+        end
       elsif input.is_key_down(Input::KEY_S)
-        @view_y += SCROLL_SPEED
-        reset_viewport
+        unless @view_y + SCROLL_SPEED > (@map.height - (@range_y - 1))
+          @view_y += SCROLL_SPEED
+          reset_viewport
+        end
       elsif input.is_key_down(Input::KEY_A)
-        @view_x -= SCROLL_SPEED
-        reset_viewport
+        unless @view_x - SCROLL_SPEED < (@range_x)
+          @view_x -= SCROLL_SPEED
+          reset_viewport
+        end
       elsif input.is_key_down(Input::KEY_D)
-        @view_x += SCROLL_SPEED
-        reset_viewport
+        unless @view_x + SCROLL_SPEED > (@map.width - (@range_x))
+          @view_x += SCROLL_SPEED
+          reset_viewport
+        end
       end
     end
 
