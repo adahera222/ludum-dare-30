@@ -14,8 +14,8 @@ java_import org.newdawn.slick.SlickException
 java_import org.newdawn.slick.AppGameContainer
 
 require 'states/map_state'
-require 'template/world'
-require 'template/ui_handler'
+require 'yogo/world'
+require 'yogo/ui_handler'
 
 module YOGO
   class Game < StateBasedGame
