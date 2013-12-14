@@ -17,7 +17,7 @@ require 'states/map_state'
 require 'template/world'
 require 'template/ui_handler'
 
-module Template
+module YOGO
   class Game < StateBasedGame
 
     attr_reader :world, :ui_handler
@@ -49,6 +49,6 @@ WIDTH = 1000
 HEIGHT = 700
 FULLSCREEN = false
 
-app = AppGameContainer.new(Template::Game.new('Template'))
+app = AppGameContainer.new(YOGO::Game.new('YOGO'))
 app.set_display_mode(WIDTH, HEIGHT, FULLSCREEN)
 app.start

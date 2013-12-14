@@ -1,4 +1,4 @@
-module Template
+module YOGO
   class UIHandler
 
     TEXT_SHOW_SECONDS = 10

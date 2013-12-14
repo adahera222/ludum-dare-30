@@ -2,7 +2,7 @@ configuration do |c|
 	# The name for your resulting application file (e.g., if the project_name is 'foo' then you'll get foo.jar, foo.exe, etc.)
 	# default value: "jruby-slick2d"
 	#
-	c.project_name = "template"
+	c.project_name = "yogo"
 
 	# Undocumented option 'output_dir'
 	# default value: "package"
@@ -17,7 +17,7 @@ configuration do |c|
 	# The main ruby file to invoke, minus the .rb extension
 	# default value: "main"
 	#
-	c.main_ruby_file = "template"
+	c.main_ruby_file = "yogo"
 
 	# The fully-qualified name of the main Java file used to initiate the application.
 	# default value: "org.monkeybars.rawr.Main"

@@ -4,7 +4,7 @@ java_import org.newdawn.slick.PackedSpriteSheet
 java_import org.newdawn.slick.fills.GradientFill
 java_import org.newdawn.slick.geom.Rectangle
 
-module Template
+module YOGO
   class MapState < BasicGameState
 
     def getID
