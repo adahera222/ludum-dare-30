@@ -1,5 +1,5 @@
 require 'yogo/map'
-require 'yogo/structure'
+require 'yogo/structure/all'
 
 module YOGO
   class World
@@ -12,7 +12,8 @@ module YOGO
       @map = Map.new(40,40)
     end
 
-    def update(container, delta)
+    def turn!
+      @map.update!
     end
   end
 end

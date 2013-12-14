@@ -32,6 +32,12 @@ module YOGO
       (x >= 0 && x <= @maxx) && (y >= 0 && y <= @maxy)
     end
 
+    def update!
+      @cells.each do |pos, cell|
+        cell.update(self)
+      end
+    end
+
   private
 
     def random!

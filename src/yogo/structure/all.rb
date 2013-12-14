@@ -1,0 +1,1 @@
+require 'yogo/structure/mine'

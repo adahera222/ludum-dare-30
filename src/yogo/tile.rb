@@ -31,6 +31,10 @@ module YOGO
       @pos[1]
     end
 
+    def structure
+      @data[:structure]
+    end
+
     def [](property)
       @data[property]
     end
@@ -41,8 +45,8 @@ module YOGO
 
     def terrain_name
       t = TERRAIN[@data[:terrain]] || 'Water'
-      if @data[:structure] then
-        t = "#{t} (#{@data[:structure].name})"
+      if structure then
+        t = "#{t} (#{structure.name})"
       end
       t
     end
@@ -52,7 +56,7 @@ module YOGO
     end
 
     def valid_structures
-      return [] if @data[:structure]
+      return [] if structure
       list = []
       case @data[:terrain]
       when :grass, :hills, :mountains
@@ -64,6 +68,13 @@ module YOGO
         list << :platform if @data[:resource] == :oil
       end
       list
+    end
+
+    def update(world)
+      if structure then
+        structure.update(world)
+      end
+      # TODO: Pollution spreads out to tiles with lesser
     end
 
   end

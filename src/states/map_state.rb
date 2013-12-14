@@ -89,8 +89,14 @@ module YOGO
     end
 
     def keyPressed(keycode, char)
+      if char == 13 then
+        @world.turn!
+        return
+      end
+
       if @current_selected then
         return if %w( w a s d ).include?(char.chr)
+
         building = nil
         KEYS.each do |key, structures|
           if char == key.ord then
@@ -105,7 +111,7 @@ module YOGO
           end
         end
         if building then
-          s = Structure.new(building, @current_selected)
+          s = Structure.create(building, @current_selected)
           s.owner = @world.player
           @current_selected[:structure] = s
           reset_minimap
