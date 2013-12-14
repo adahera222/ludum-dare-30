@@ -69,6 +69,10 @@ module YOGO
         RESOURCE_COLORS[type] || RESOURCE_COLORS[:blank]
       end
 
+      def structure_color
+        @structure_color ||= Color.new(255,255,0,255)
+      end
+
       def selected
         @tiles[:ui][:selected]
       end

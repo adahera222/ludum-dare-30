@@ -37,7 +37,11 @@ module YOGO
     end
 
     def terrain_name
-      TERRAIN[@data[:terrain]] || 'Water'
+      t = TERRAIN[@data[:terrain]] || 'Water'
+      if @data[:structure] then
+        t = "#{t} (#{@data[:structure].name})"
+      end
+      t
     end
 
     def resource_name
@@ -45,6 +49,7 @@ module YOGO
     end
 
     def valid_structures
+      return [] if @data[:structure]
       list = []
       case @data[:terrain]
       when :grass, :hills, :mountains

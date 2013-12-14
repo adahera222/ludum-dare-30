@@ -23,13 +23,6 @@ module YOGO
       'o' => [ :dock, :foundry ]
     }
 
-    STRUCTURE_TEXT = {
-      :mine => 'mine',
-      :factory => 'factory',
-      :power_station => 'powerplant',
-      :well => 'well'
-    }
-
     def getID
       1
     end
@@ -112,7 +105,14 @@ module YOGO
             end
           end
         end
-        puts "UNKNOWN: #{char}" if building.nil?
+        if building then
+          s = Structure.new(building, @current_selected)
+          s.owner = @world.player
+          @current_selected[:structure] = s
+          reset_minimap
+        else
+          puts "UNKNOWN: #{char}"
+        end
       end
     end
 
@@ -137,6 +137,10 @@ module YOGO
     def reset_viewport
       @viewport = nil
       @terrain_buffer = nil
+    end
+
+    def reset_minimap
+      @minimap_buffer = nil
     end
 
     def viewport
@@ -213,7 +217,9 @@ module YOGO
         0.upto(@map.maxx) do |x|
           0.upto(@map.maxy) do |y|
             tile = @map[[x,y]]
-            if tile[:resource] then
+            if tile[:structure] then
+              color = @tileset.structure_color
+            elsif tile[:resource] then
               color = @tileset.resource_color(tile[:resource])
             else
               color = @tileset.terrain_color(tile[:terrain])
@@ -247,6 +253,11 @@ module YOGO
         sprite = @tileset.resource(tile[:resource])
         sprite.draw(vx, vy)
       end
+
+      if tile[:structure] then
+        sprite = @tileset.structure(tile[:structure].type)
+        sprite.draw(vx, vy)
+      end
     end
 
     def draw_tile_data(graphics)
@@ -277,7 +288,7 @@ module YOGO
 
         tile_buffer.draw(vx, vy)
         @tileset.structure(type).draw(vx, vy)
-        graphics.draw_string("(#{key[0]}) #{STRUCTURE_TEXT[type]}", vx + 5 + TILE_SIZE, vy)
+        graphics.draw_string("(#{key[0]}) #{Structure.name(type)}", vx + 5 + TILE_SIZE, vy)
       end
 
     end

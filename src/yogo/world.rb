@@ -1,4 +1,5 @@
 require 'yogo/map'
+require 'yogo/structure'
 
 module YOGO
   class World
