@@ -18,9 +18,12 @@ module YOGO
       viewport.each do |tile, vpos|
         vx,vy = vpos
 
-        if tile[:height] > 1.0 then
-          h = (tile[:height] + 1.0) / 16.0
-          graphics.set_color(Color.new(h,h,h,1.0))
+        if tile[:terrain] == :land then
+          graphics.set_color(Color.new(0.0,1.0,0.0,1.0))
+        elsif tile[:terrain] == :hills then
+          graphics.set_color(Color.new(0.0,0.5,0.0,1.0))
+        elsif tile[:terrain] == :mountain then
+          graphics.set_color(Color.new(0.5,0.5,0.5,1.0))
         else
           graphics.set_color(Color.new(0,0,1.0,1.0))
         end

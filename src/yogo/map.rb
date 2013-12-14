@@ -45,14 +45,16 @@ module YOGO
     # TODO: Generate random plates and give them a height
     # TODO: Where two plates overlap, decide if it's a +1 or a -1
     def generate_tectonic_plates
-      10.times do
+      max_radius = (width / 10) * 2.0
+
+      (width/8).times do
         candidates = { }
 
-        radius = (width / 4) * (1.0 + Kernel::rand)
+        radius = (width / 10) * (1.0 + Kernel::rand)
         pos = [ Kernel::rand(@maxx), Kernel::rand(@maxy) ]
         cx,cy = pos
 
-        tiles = { pos => true }
+        tiles = { }
 
         1.upto(radius) do |r|
           (cx-r).upto(cx+r) do |x|
@@ -61,10 +63,17 @@ module YOGO
               next if tiles[pos]
               next unless in_range?(pos)
 
-              tiles[pos] = true
-
-              self[pos][:height] ||= 0
-              self[pos][:height] += 1
+              if Kernel::rand >= r.to_f/max_radius
+                tiles[pos] = true
+                tile = self[pos]
+                if tile[:terrain] == :land then
+                  tile[:terrain] = :hills
+                elsif tile[:terrain] == :hills then
+                  tile[:terrain] = :mountain
+                else
+                  tile[:terrain] = :land
+                end
+              end
             end
           end
         end
