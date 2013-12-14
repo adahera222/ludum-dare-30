@@ -11,6 +11,19 @@ module YOGO
     SIDEBAR_WIDTH = 280
     MINIMAP_WIDTH = SIDEBAR_WIDTH - 4
 
+    KEYS = {
+      'm' => [ :mine, :well ],
+      'f' => [ :factory ],
+      'p' => [ :power_station ]
+    }
+
+    STRUCTURE_TEXT = {
+      :mine => '(m)ine',
+      :factory => '(f)actory',
+      :power_station => '(p)owerplant',
+      :well => '(m) well'
+    }
+
     def getID
       1
     end
@@ -234,10 +247,11 @@ module YOGO
         vx = buttons_x + ((idx % 2) * SIDEBAR_WIDTH / 2)
         vy = buttons_y + ((idx / 2) * (TILE_SIZE + 5))
 
+        key = KEYS.find { |k, s| s.include?(type) }
+
         tile_buffer.draw(vx, vy)
         @tileset.structure(type).draw(vx, vy)
-        graphics.draw_string(type.to_s, vx + 5 + TILE_SIZE, vy)
-
+        graphics.draw_string(STRUCTURE_TEXT[type], vx + 5 + TILE_SIZE, vy)
       end
 
     end

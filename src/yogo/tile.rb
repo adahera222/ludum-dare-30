@@ -47,7 +47,7 @@ module YOGO
     def valid_structures
       list = []
       case @data[:terrain]
-      when :grass, :hills, :mountain
+      when :grass, :hills, :mountains
         list += [ :factory, :power_station ]
         list << :mine if [ :coal, :iron, :aluminium, :uranium ].include?(@data[:resource])
         list << :well if @data[:resource] == :oil
