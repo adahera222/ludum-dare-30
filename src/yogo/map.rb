@@ -52,7 +52,7 @@ module YOGO
       hill_resources = [ :arable, :coal, :iron, :uranium, :aluminium ]
       mountain_resources = [ :coal, :iron, :uranium, :aluminium ]
 
-      (width/8).times do
+      (width/4).times do
         candidates = { }
 
         radius = (width / 10) * (1.0 + Kernel::rand)
