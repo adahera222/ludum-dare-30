@@ -144,10 +144,6 @@ module YOGO
             @tileset.selected.draw(vx, vy)
           end
         end
-
-        # NOTE: Seems to be slower than just rendering every time
-        # @terrain_buffer = Image.new(@screen_x - SIDEBAR_WIDTH, @screen_y)
-        # graphics.copy_area(@terrain_buffer, 0, 0)
       end
     end
 
@@ -226,6 +222,24 @@ module YOGO
       if @current_selected[:resource] then
         graphics.draw_string(@current_selected.resource_name, data_x + 5 + TILE_SIZE, data_y + 16)
       end
+
+      buttons_x = data_x
+      buttons_y = data_y + TILE_SIZE + 5
+
+      tile_buffer = Image.new(TILE_SIZE, TILE_SIZE)
+      graphics.copy_area(tile_buffer, data_x, data_y)
+
+      # Draw out the structures we can construct here
+      @current_selected.valid_structures.each_with_index do |type, idx|
+        vx = buttons_x + ((idx % 2) * SIDEBAR_WIDTH / 2)
+        vy = buttons_y + ((idx / 2) * (TILE_SIZE + 5))
+
+        tile_buffer.draw(vx, vy)
+        @tileset.structure(type).draw(vx, vy)
+        graphics.draw_string(type.to_s, vx + 5 + TILE_SIZE, vy)
+
+      end
+
     end
 
   end
