@@ -13,15 +13,21 @@ module YOGO
 
     KEYS = {
       'm' => [ :mine, :well ],
-      'f' => [ :factory ],
-      'p' => [ :power_station ]
+      'c' => [ :factory ],
+      'i' => [ :sawmill ],
+      'f' => [ :farm, :fishing_fleet ],
+      'p' => [ :power_station ],
+      'n' => [ :nuclear_power ],
+      'b' => [ :wind_farm ],
+      'l' => [ :plantation ],
+      'o' => [ :dock, :foundry ]
     }
 
     STRUCTURE_TEXT = {
-      :mine => '(m)ine',
-      :factory => '(f)actory',
-      :power_station => '(p)owerplant',
-      :well => '(m) well'
+      :mine => 'mine',
+      :factory => 'factory',
+      :power_station => 'powerplant',
+      :well => 'well'
     }
 
     def getID
@@ -87,6 +93,26 @@ module YOGO
           @view_x += SCROLL_SPEED
           reset_viewport
         end
+      end
+    end
+
+    def keyPressed(keycode, char)
+      if @current_selected then
+        return if %w( w a s d ).include?(char.chr)
+        building = nil
+        KEYS.each do |key, structures|
+          if char == key.ord then
+            avail = @current_selected.valid_structures
+            structures.each do |type|
+              if avail.include?(type) then
+                puts "BUILDING: #{type}"
+                building = type
+                break
+              end
+            end
+          end
+        end
+        puts "UNKNOWN: #{char}" if building.nil?
       end
     end
 
@@ -244,14 +270,14 @@ module YOGO
 
       # Draw out the structures we can construct here
       @current_selected.valid_structures.each_with_index do |type, idx|
-        vx = buttons_x + ((idx % 2) * SIDEBAR_WIDTH / 2)
-        vy = buttons_y + ((idx / 2) * (TILE_SIZE + 5))
+        vx = buttons_x
+        vy = buttons_y + (idx * (TILE_SIZE + 5))
 
         key = KEYS.find { |k, s| s.include?(type) }
 
         tile_buffer.draw(vx, vy)
         @tileset.structure(type).draw(vx, vy)
-        graphics.draw_string(STRUCTURE_TEXT[type], vx + 5 + TILE_SIZE, vy)
+        graphics.draw_string("(#{key[0]}) #{STRUCTURE_TEXT[type]}", vx + 5 + TILE_SIZE, vy)
       end
 
     end
