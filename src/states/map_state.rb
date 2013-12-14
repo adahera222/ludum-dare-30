@@ -7,7 +7,7 @@ java_import org.newdawn.slick.geom.Rectangle
 module YOGO
   class MapState < BasicGameState
 
-    TILE_SIZE = 48
+    TILE_SIZE = 6
     SCROLL_SPEED = 0.25
 
     def getID
@@ -18,8 +18,9 @@ module YOGO
       viewport.each do |tile, vpos|
         vx,vy = vpos
 
-        graphics.set_color(Color.new(1.0,1.0,1.0,1.0))
-        graphics.draw_rect(vx, vy, TILE_SIZE, TILE_SIZE)
+        h = (tile[:height].to_f + 1.0) / 16.0
+        graphics.set_color(Color.new(h,h,h,1.0))
+        graphics.fill_rect(vx, vy, TILE_SIZE, TILE_SIZE)
       end
 
       graphics.draw_string("(ESC to exit)", 8, container.height - 30)

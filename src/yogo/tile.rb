@@ -16,5 +16,13 @@ module YOGO
       @pos[1]
     end
 
+    def [](property)
+      @data[property]
+    end
+
+    def []=(property, value)
+      @data[property] = value
+    end
+
   end
 end

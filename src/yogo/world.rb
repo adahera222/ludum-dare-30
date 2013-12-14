@@ -8,7 +8,7 @@ module YOGO
     attr_reader :map
 
     def initialize
-      @map = Map.new(10,10)
+      @map = Map.new(100,100)
     end
 
     def update(container, delta)

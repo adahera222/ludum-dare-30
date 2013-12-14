@@ -49,6 +49,8 @@ WIDTH = 1000
 HEIGHT = 700
 FULLSCREEN = false
 
+Kernel::srand(5000)
+
 app = AppGameContainer.new(YOGO::Game.new('YOGO'))
 app.set_display_mode(WIDTH, HEIGHT, FULLSCREEN)
 app.start
