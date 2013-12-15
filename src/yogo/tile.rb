@@ -221,8 +221,6 @@ module YOGO
           tile[prop] += spread
           @data[prop] -= spread
         end
-
-        # puts "Moved #{spread} #{prop} from #{@pos.inspect} (#{@data[prop].inspect} to #{tile.pos.inspect} (#{tile[prop].inspect})"
       end
     end
 

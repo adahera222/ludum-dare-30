@@ -53,27 +53,12 @@ module YOGO
           @icons << :no_power
         end
 
-        if @owner.consume!(:timber, @population.ceil, world)
-          growth_rate += 0.015
-        else
-          world.ui_handler.location_alert("#{self.name} can't grow due to a lack of timber", @tile)
-          @notes << 'No Timber'
-          @icons << :no_timber
-        end
-
         if @owner.consume!(:steel, @population.ceil, world)
           growth_rate += 0.015
         else
           world.ui_handler.location_alert("#{self.name} can't grow due to a lack of steel", @tile)
           @notes << 'No Steel'
           @icons << :no_steel
-        end
-
-        unless @owner.consume!(:oil, (@population * 2.0).ceil, world)
-          growth_rate -= 0.015
-          world.ui_handler.location_alert("#{self.name} has a transport crisis due to no oil", @tile)
-          @notes << 'No Oil'
-          @icons << :no_oil
         end
 
         @population *= growth_rate

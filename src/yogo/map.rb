@@ -91,8 +91,8 @@ module YOGO
     def generate_tectonic_plates
       max_radius = (width / 10) * 2.0
 
-      hill_resources = [ :arable, :coal, :iron, :uranium, :aluminium ]
-      mountain_resources = [ :coal, :iron, :uranium, :aluminium ]
+      hill_resources = [ :arable, :coal, :iron, :uranium ]
+      mountain_resources = [ :coal, :iron, :uranium ]
 
       (width/4).times do
         candidates = { }
@@ -125,7 +125,6 @@ module YOGO
                   tile[:terrain] = :grass
                   tile[:resource] = nil
                   tile[:resource] = :arable if Kernel::rand < 0.50
-                  tile[:resource] = :oil if Kernel::rand < 0.025
                 end
               end
             end
