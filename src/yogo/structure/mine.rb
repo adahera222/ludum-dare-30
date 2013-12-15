@@ -8,6 +8,12 @@ module YOGO
         { @tile.resource => 5 }
       end
 
+      def causes
+        { :air_pollution => 0.01 * @production,
+          :water_pollution => 0.1 * @production
+        }
+      end
+
       def update(world)
         if @tile.resource == :oil then
           @running_cost = 2.0
@@ -16,10 +22,6 @@ module YOGO
         end
 
         super
-
-        # Create pollution on the tile we are on
-        @tile[:water_pollution] += 0.1
-        @tile[:air_pollution] += 0.01
       end
 
     end

@@ -8,6 +8,12 @@ module YOGO
         { :power => 10 * @production }
       end
 
+      def causes
+        { :air_pollution => 0.1 * @production,
+          :water_pollution => 0.005 * @production
+        }
+      end
+
       def update(world)
         @running_cost = 1.0
 
@@ -16,9 +22,6 @@ module YOGO
         @running_cost += coal[:price]
 
         super
-
-        @tile[:air_pollution] += 0.1 * @production
-        @tile[:water_pollution] += 0.005 * @production
       end
 
     end

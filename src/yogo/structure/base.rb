@@ -55,12 +55,26 @@ module YOGO
         NAMES[@type]
       end
 
-      def update(map)
+      def production
+        {}
+      end
+
+      def causes
+        {}
+      end
+
+      def update(world)
+        causes.each do |detail, effect|
+          @tile[detail] += effect
+          @running_cost += @tile.state.cost_impact(detail, effect, self)
+        end
+
         @owner.balance -= @running_cost
 
         production.each do |commodity, quantity|
           @owner.store(commodity, quantity, @running_cost / quantity) unless quantity <= 0
         end
+
       end
 
       # def production

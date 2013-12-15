@@ -375,6 +375,10 @@ module YOGO
           graphics.draw_string("Produces #{quantity} #{item}", vx, vy)
           vy += 15
         end
+        structure.causes.each do |effect, quantity|
+          graphics.draw_string("Produces #{sprintf('%0.2f', quantity)} #{effect}", vx, vy)
+          vy += 15
+        end
 
       end
 

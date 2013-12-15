@@ -26,12 +26,14 @@ module YOGO
         @population.floor
       end
 
+      def causes
+        { :air_pollution => 0.02 * @population,
+          :water_pollution => 0.01 * @population
+        }
+      end
+
       def update(world)
         super
-
-        # Create pollution on the tile we are on
-        @tile[:water_pollution] += 0.01 * @population
-        @tile[:air_pollution] += 0.02 * @population
 
         growth_rate = 1.0
 

@@ -152,7 +152,8 @@ module YOGO
       end
 
       if terrain == :water then
-        @data[:inundation] += 0.01 # Total inundation at ~400 turns, ~30 years at max rate.
+        @data[:inundation] += 0.01 * world.warming_rate
+        @data[:inundation] = 0.0 if @data[:inundation] < 0.0
       else
         if inundation > 0.5 then
           @data[:terrain] = :water
