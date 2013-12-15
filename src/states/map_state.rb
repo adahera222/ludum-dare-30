@@ -156,6 +156,8 @@ module YOGO
 
         puts "Rel: #{[rx, ry].inspect} => Tile: #{[tx, ty].inspect}"
         @current_selected = @map[[tx, ty]]
+        reset_viewport
+        reset_minimap
       end
     end
 
@@ -208,7 +210,7 @@ module YOGO
         viewport.each do |tile, vpos|
           vx,vy = vpos
 
-          render_tile(tile, vx, vy)
+          render_tile(tile, vx, vy, graphics)
 
           if tile == @current_selected then
             @tileset.selected.draw(vx, vy)
@@ -259,16 +261,25 @@ module YOGO
             graphics.set_color(color)
             graphics.fill_rect(vx, vy, w, h)
 
-            if @minimap_mode == :countries then
-              if tile.state && tile.state.color then
-                color = tile.state.color.multiply(Color.new(1.0,1.0,1.0,0.5))
+            if @minimap_mode == :countries || @current_selected && @current_selected.structure.is_a?(Structure::City) then
+              color = nil
+              if @minimap_mode == :countries then
+                if tile.state && tile.state.color then
+                  color = tile.state.color.multiply(Color.new(1.0,1.0,1.0,0.5))
+                else
+                  color = Color.new(0.0, 0.0, 0.0, 0.5)
+                end
               else
-                color = Color.new(0.0, 0.0, 0.0, 0.5)
+                if tile.state && tile.state.color && tile.state == @current_selected.structure.owner then
+                  color = tile.state.color.multiply(Color.new(1.0,1.0,1.0,0.5))
+                end
               end
             end
 
-            graphics.set_color(color)
-            graphics.fill_rect(vx, vy, w, h)
+            if color then
+              graphics.set_color(color)
+              graphics.fill_rect(vx, vy, w, h)
+            end
 
             vy += h
           end
@@ -291,7 +302,7 @@ module YOGO
       draw_tile_data(graphics)
     end
 
-    def render_tile(tile, vx, vy)
+    def render_tile(tile, vx, vy, graphics, overlay=true)
       sprite = @tileset.terrain(tile.terrain)
       sprite.draw(vx, vy)
 
@@ -323,6 +334,14 @@ module YOGO
         sprite = @tileset.ui(:air_pollution)
         sprite.draw(vx, vy, Color.new(1.0,1.0,1.0, tile.air_pollution))
       end
+
+      if overlay && @current_selected && @current_selected.structure.is_a?(Structure::City) then
+        if tile.state && tile.state.color && tile.state == @current_selected.structure.owner then
+          color = @font_color.multiply(Color.new(1.0,1.0,1.0,0.5))
+          graphics.set_color(color)
+          graphics.fill_rect(vx, vy, TILE_SIZE, TILE_SIZE)
+        end
+      end
     end
 
     def draw_tile_data(graphics)
@@ -335,7 +354,7 @@ module YOGO
 
       graphics.set_color(@font_color)
 
-      render_tile(@current_selected, data_x, data_y)
+      render_tile(@current_selected, data_x, data_y, graphics, false)
       graphics.draw_string(@current_selected.terrain_name, text_x, data_y)
 
       if @current_selected[:resource] then
