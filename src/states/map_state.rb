@@ -167,6 +167,7 @@ module YOGO
             s.owner = @world.player
             @current_selected[:structure] = s
             reset_minimap
+            @ui_handler.immediate("You have built a new #{s.name} in #{@current_selected.state.name}")
           else
             puts "UNKNOWN: #{char}"
           end
