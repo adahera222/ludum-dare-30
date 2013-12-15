@@ -10,9 +10,12 @@ module YOGO
 
     def initialize
       @map = Map.new(40,40)
+      @turn = 0
     end
 
     def turn!
+      @turn += 1
+      puts "Turn: #{@turn}"
       @map.update!
     end
   end
