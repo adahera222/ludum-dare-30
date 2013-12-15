@@ -4,14 +4,21 @@ module YOGO
 
       attr_accessor :balance
       attr_accessor :color
+      attr_reader :structures
 
       def initialize
         @balance = 0
         @stockpile = Hash.new { |hash, commodity| hash[commodity] = { :stock => 0, :cost => 0 } }
+        @structures = []
       end
 
       def update(world)
         # NOOP
+      end
+
+      def add_structure(structure)
+        @structures << structure
+        @structures = @structures.compact.uniq
       end
 
       def store(commodity, quantity, unit_cost)

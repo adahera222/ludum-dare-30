@@ -32,6 +32,7 @@ module YOGO
       @tileset = @ui_handler.tileset
       @world = game.world
       @map = @world.map
+      @player = @world.player
 
       @screen_x = container.width
       @screen_y = container.height
@@ -119,26 +120,54 @@ module YOGO
       if @current_selected then
         return if %w( w a s d ).include?(char.chr)
 
-        building = nil
-        KEYS.each do |key, structures|
-          if char == key.ord then
-            avail = @current_selected.valid_structures
-            structures.each do |type|
-              if avail.include?(type) then
-                puts "BUILDING: #{type}"
-                building = type
-                break
+        if @current_selected.structure && @current_selected.structure.is_a?(Structure::City) then
+          city = @current_selected.structure
+          state = city.owner
+          case char.chr
+          when '-'
+            # Lobby lower air tax
+            state.lobby(:air_pollution, -1.0, @player)
+            @player.balance -= 1.0
+            @ui_handler.immediate("You invest $1 lobbying for lower air pollution regulation")
+          when '='
+            # Lobby raise air tax
+            state.lobby(:air_pollution, 1.0, @player)
+            @player.balance -= 1.0
+            @ui_handler.immediate("You invest $1 lobbying for greater air pollution regulation")
+          when '['
+            # Lobby lower water tax
+            state.lobby(:water_pollution, -1.0, @player)
+            @player.balance -= 1.0
+            @ui_handler.immediate("You invest $1 lobbying for lower water pollution regulation")
+          when '='
+            # Lobby raise water tax
+            state.lobby(:water_pollution, 1.0, @player)
+            @player.balance -= 1.0
+            @ui_handler.note("You invest $1 lobbying for greater water pollution regulation")
+          end
+
+        elsif @current_selected.structure.nil? then
+          building = nil
+          KEYS.each do |key, structures|
+            if char == key.ord then
+              avail = @current_selected.valid_structures
+              structures.each do |type|
+                if avail.include?(type) then
+                  puts "BUILDING: #{type}"
+                  building = type
+                  break
+                end
               end
             end
           end
-        end
-        if building then
-          s = Structure.create(building, @current_selected)
-          s.owner = @world.player
-          @current_selected[:structure] = s
-          reset_minimap
-        else
-          puts "UNKNOWN: #{char}"
+          if building then
+            s = Structure.create(building, @current_selected)
+            s.owner = @world.player
+            @current_selected[:structure] = s
+            reset_minimap
+          else
+            puts "UNKNOWN: #{char}"
+          end
         end
       end
     end
@@ -400,12 +429,21 @@ module YOGO
         end
 
         if structure.is_a?(Structure::City) then
+          vy += 15
           graphics.draw_string("TAX RATES", vx, vy)
           vy += 15
           graphics.draw_string(sprintf("Air: $%.2f per 1", structure.owner.air_pollution_tax), vx, vy)
           vy += 15
           graphics.draw_string(sprintf("Water: $%.2f per 1 unit", structure.owner.water_pollution_tax), vx, vy)
           vy += 15
+
+          if structure.notes then
+            vy += 15
+            structure.notes.each do |note|
+              graphics.draw_string(note, vx, vy)
+              vy += 15
+            end
+          end
         end
 
       end

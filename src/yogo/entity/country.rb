@@ -46,6 +46,19 @@ module YOGO
         @statistics[detail] += quantity
       end
 
+      def lobby(detail, amount, entity)
+        if amount < 0.0 then
+          @lobby[detail][:against] += amount
+        else
+          @lobby[detail][:for] += amount
+        end
+        @lobby[detail][:sway] = (@lobby[detail][:against] + @lobby[detail][:for]) / population * 0.1
+      end
+
+      def population
+        @structures.inject(0.0) { |sum, structure| sum + (structure.respond_to?(:population) ? structure.population : 0.0) }
+      end
+
       def update(world)
         consider_regulations(world)
         puts "STATS: #{@statistics.inspect}"
@@ -74,7 +87,7 @@ module YOGO
           @lobby[detail][:accumulated] += @lobby[detail][:sway]
           @lobby[detail][:accumulated] += inundation_panic * 0.1
           if @lobby[detail][:accumulated].abs >= 1.0 then
-            alter = (@lobby[detail][:accumulated] * inundation_panic)
+            alter = (@lobby[detail][:accumulated] * (inundation_panic + 0.01))
             @taxes[detail] += alter
             @taxes[detail] = 0.0 if @taxes[detail] < 0.0
             @lobby[detail][:accumulated] = 0.0

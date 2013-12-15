@@ -39,7 +39,7 @@ module YOGO
     class Base
 
       attr_reader :type, :tile, :notes, :icons
-      attr_accessor :owner
+      attr_reader :owner
 
       def initialize(type, tile)
         @type = type
@@ -56,6 +56,11 @@ module YOGO
 
       def name
         NAMES[@type]
+      end
+
+      def owner=(owner)
+        @owner = owner
+        @owner.add_structure(self)
       end
 
       def production

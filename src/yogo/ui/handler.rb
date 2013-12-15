@@ -39,12 +39,18 @@ module YOGO
         @text << text
       end
 
-      def notice(messasge)
+      def notice(message)
         # TODO: Show a history item
+        puts message
+      end
+
+      def immediate(message)
+        puts message
       end
 
       def location_alert(message, tile)
         # TODO: Show a history item that takes you to this spot
+        puts message
       end
 
     end
