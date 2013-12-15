@@ -66,6 +66,8 @@ module YOGO
         draw_sidebar(graphics)
       end
 
+      @ui_handler.render(container, graphics)
+
       graphics.draw_string("(ESC to exit)", 8, container.height - 30)
     end
 
@@ -143,7 +145,7 @@ module YOGO
             # Lobby raise water tax
             state.lobby(:water_pollution, 1.0, @player)
             @player.balance -= 1.0
-            @ui_handler.note("You invest $1 lobbying for greater water pollution regulation")
+            @ui_handler.immediate("You invest $1 lobbying for greater water pollution regulation")
           end
 
         elsif @current_selected.structure.nil? then

@@ -4,14 +4,18 @@ module YOGO
   module UI
     class Handler
 
-      TEXT_SHOW_SECONDS = 10
+      TEXT_SHOW_TIME = 10000.0
+      TEXT_THROTTLE_TIME = 500.0
 
       attr_accessor :active
       attr_reader :text
 
       def initialize
         @text = []
+        @list = []
         @active = false
+        @font_color = Color.new(1.0, 1.0, 1.0, 1.0)
+        @timer = 0.0
       end
 
       def tileset
@@ -19,14 +23,43 @@ module YOGO
       end
 
       def update(container, delta)
-        @text = @text.collect { |text|
-          text[:expires] -= delta
-          return text unless text[:expires] <= 0.0
-        }.compact
+        if @text.length == 0
+          @timer = 0.0
+        else
+          if @list.length == 0 then
+            @timer = 100000.0
+          else
+            @timer += delta
+          end
+        end
+
+        if @timer >= TEXT_THROTTLE_TIME then
+          msg = @text.shift
+          @list.unshift([ msg, TEXT_SHOW_TIME ])
+          @timer = 0.0
+        end
+
+        @list.each do |data|
+          data[1] -= delta
+        end
+
+        @list.reject! { |data| data[1] < 0.0 }
       end
 
       def render(container, graphics)
-        if @active then
+        vx = 20
+        vy = 20
+
+        @list.each do |data|
+          message = data[0]
+          if data[1] < 2000.0 then
+            i = data[1] / 2000.00
+          else
+            i = 1.0
+          end
+          graphics.set_color(@font_color.multiply(Color.new(1.0, 1.0, 1.0, i)))
+          graphics.draw_string(message, vx, vy)
+          vy += 16
         end
       end
 
@@ -34,23 +67,21 @@ module YOGO
         @notices = []
       end
 
-      def show_text(pos, content)
-        text = { :pos => pos, :content => content, :expires => TEXT_SHOW_SECONDS * 1000 }
-        @text << text
-      end
-
       def notice(message)
         # TODO: Show a history item
         puts message
+        @text << message
       end
 
       def immediate(message)
         puts message
+        @list.unshift([ message, TEXT_SHOW_TIME ])
       end
 
       def location_alert(message, tile)
         # TODO: Show a history item that takes you to this spot
         puts message
+        @text << message
       end
 
     end
