@@ -91,7 +91,7 @@ module YOGO
     def generate_tectonic_plates
       max_radius = (width / 10) * 2.0
 
-      hill_resources = [ :arable, :coal, :iron, :uranium ]
+      hill_resources = [ :coal, :iron, :uranium ]
       mountain_resources = [ :coal, :iron, :uranium ]
 
       (width/4).times do
@@ -116,16 +116,18 @@ module YOGO
                 if tile[:terrain] == :grass then
                   tile[:terrain] = :hills
                   tile[:resource] = nil
-                  tile[:resource] = hill_resources[Kernel::rand(hill_resources.length - 1)] if Kernel::rand < 0.10
+                  tile[:resource] = hill_resources[Kernel::rand(hill_resources.length - 1)] if Kernel::rand < 0.20
+                  tile[:resource] = :arable if tile[:resource].nil? && Kernel::rand < 0.40
                 elsif tile[:terrain] == :hills then
                   tile[:terrain] = :mountains
                   tile[:resource] = nil
-                  tile[:resource] = mountain_resources[Kernel::rand(mountain_resources.length - 1)] if Kernel::rand < 0.35
+                  tile[:resource] = mountain_resources[Kernel::rand(mountain_resources.length - 1)] if Kernel::rand < 0.40
                 else
                   tile[:terrain] = :grass
                   tile[:resource] = nil
-                  tile[:resource] = :arable if Kernel::rand < 0.50
+                  tile[:resource] = :arable if Kernel::rand < 0.10
                   tile[:resource] = :oil if Kernel::rand < 0.025
+                  tile[:resource] = hill_resources[Kernel::rand(hill_resources.length - 1)] if tile[:resource].nil? && Kernel::rand < 0.05
                 end
               end
             end
