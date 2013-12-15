@@ -57,6 +57,18 @@ module YOGO
       @data[:terrain]
     end
 
+    def resource
+      @data[:resource]
+    end
+
+    def air_pollution
+      @data[:air_pollution]
+    end
+
+    def water_pollution
+      @data[:water_pollution]
+    end
+
     def [](property)
       @data[property]
     end
@@ -96,18 +108,23 @@ module YOGO
       if structure then
         structure.update(map)
       end
-      # TODO: Pollution spreads out to tiles with lesser
+
+      # Pollution spreads out to tiles with lesser
       air_spread = []
       water_spread = []
       NEIGHBOURS.each do |offset|
         neighbour = map[[x + offset[0], y + offset[1]]]
         next if neighbour.nil?
-        air_spread << neighbour if neighbour[:air_pollution] < @data[:air_pollution]
-        water_spread << neighbour if neighbour[:water_pollution] < @data[:water_pollution]
+        air_spread << neighbour if neighbour.air_pollution < air_pollution
+        water_spread << neighbour if neighbour.water_pollution < water_pollution
       end
 
       spread(:air_pollution, air_spread)
       spread(:water_pollution, water_spread)
+
+      # When tiles reach a threshold, they can loose their bonuses
+      @data[:resource] = nil if resource == :arable && (air_pollution > 0.75 || water_pollution > 0.25)
+      @data[:resource] = nil if resource == :fish && water_pollution > 0.10
     end
 
   private
