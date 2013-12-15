@@ -52,6 +52,17 @@ module YOGO
       end
 
       puts "WORLD: AIR: #{@air_pollution} WATER: #{@water_pollution} RATE: #{warming_rate}"
+      if warming_rate > 0.75 then
+        @ui_handler.notice("Scientists report the polar icecaps are melting rapidly")
+      elsif warming_rate > 0.5 then
+        @ui_handler.notice("Scientists report the polar icecaps are melting")
+      elsif warming_rate > 0.25 then
+        @ui_handler.notice("Scientists report the climate is starting to change heavily")
+      elsif warming_rate > 0.05 then
+        @ui_handler.notice("Scientists are concerned about climate change")
+      elsif warming_rate < 0.00 then
+        @ui_handler.notice("Scientists are pleased that climate change appears to be reversing")
+      end
     end
 
     def warming_rate
