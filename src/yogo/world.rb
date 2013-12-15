@@ -21,6 +21,16 @@ module YOGO
       @turn = 0
     end
 
+    def generating?
+      @map.unmapped > 0
+    end
+
+    def update(game, container)
+      if generating? then
+        @map.world_gen_update(self)
+      end
+    end
+
     def turn!
       @turn += 1
       puts "Turn: #{@turn}"

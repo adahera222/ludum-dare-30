@@ -21,8 +21,8 @@ module YOGO
                 City
               when :farm
                 Farm
-              # when :power_station
-              #   PowerStation
+              when :power_station
+                PowerStation
               # when :nuclear_plant
               #   NuclearPlant
               # when :wind_farm

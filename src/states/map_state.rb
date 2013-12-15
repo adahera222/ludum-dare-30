@@ -13,7 +13,7 @@ module YOGO
 
     KEYS = {
       'm' => [ :mine, :well ],
-      'c' => [ :factory ],
+      # 'c' => [ :factory ],
       'i' => [ :sawmill ],
       'f' => [ :farm, :fishing_fleet ],
       'p' => [ :power_station ],
@@ -47,6 +47,8 @@ module YOGO
       @range_x = ((@mapview_x / TILE_SIZE) / 2).floor
       @range_y = ((@mapview_y / TILE_SIZE) / 2).floor
 
+      @minimap_mode = nil
+
       @sidebar_background = Color.new(0.2, 0.2, 0.2, 1.0)
       @minimap_background = Color.new(0.1, 0.1, 0.1, 1.0)
       @minimap_rect = Color.new(1.0,1.0,1.0,0.8)
@@ -54,8 +56,17 @@ module YOGO
     end
 
     def render(container, game, graphics)
-      draw_map(graphics)
-      draw_sidebar(graphics)
+      if @world.generating? then
+        @minimap_mode = :countries
+        draw_sidebar(graphics)
+        graphics.set_color(@font_color)
+        graphics.draw_string("Map generating... #{@world.map.unmapped}", container.width / 2, container.height / 2)
+        reset_minimap
+      else
+        # @minimap_mode = nil
+        draw_map(graphics)
+        draw_sidebar(graphics)
+      end
 
       graphics.draw_string("(ESC to exit)", 8, container.height - 30)
     end
@@ -65,6 +76,7 @@ module YOGO
       container.exit if input.is_key_down(Input::KEY_ESCAPE)
 
       @ui_handler.update(container, delta)
+      @world.update(container, delta)
 
       if input.is_key_down(Input::KEY_W)
         unless @view_y - SCROLL_SPEED < @range_y
@@ -239,6 +251,18 @@ module YOGO
             end
             graphics.set_color(color)
             graphics.fill_rect(vx, vy, w, h)
+
+            if @minimap_mode == :countries then
+              if tile.state && tile.state.color then
+                color = tile.state.color.multiply(Color.new(1.0,1.0,1.0,0.5))
+              else
+                color = Color.new(0.0, 0.0, 0.0, 0.5)
+              end
+            end
+
+            graphics.set_color(color)
+            graphics.fill_rect(vx, vy, w, h)
+
             vy += h
           end
           vy = minimap_y
@@ -249,11 +273,13 @@ module YOGO
         graphics.copy_area(@minimap_buffer, minimap_x, minimap_y)
       end
 
-      graphics.set_color(@minimap_rect)
-      graphics.draw_rect(minimap_x + (@map_min_x * w),
-                         minimap_y + (@map_min_y * h),
-                         (@map_max_x - @map_min_x) * w,
-                         (@map_max_y - @map_min_y) * h)
+      if @map_min_x && @map_min_y && @map_max_x && @map_max_y then
+        graphics.set_color(@minimap_rect)
+        graphics.draw_rect(minimap_x + (@map_min_x * w),
+                           minimap_y + (@map_min_y * h),
+                           (@map_max_x - @map_min_x) * w,
+                           (@map_max_y - @map_min_y) * h)
+      end
 
       draw_tile_data(graphics)
     end

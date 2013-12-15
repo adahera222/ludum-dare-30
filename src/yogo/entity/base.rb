@@ -3,6 +3,7 @@ module YOGO
     class Base
 
       attr_accessor :balance
+      attr_accessor :color
 
       def initialize
         @balance = 0

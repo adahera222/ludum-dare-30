@@ -6,12 +6,26 @@ module YOGO
 
     attr_reader :maxx, :maxy
     attr_accessor :entities
+    attr_reader :unmapped
+
+    COUNTRY_COLOURS = [
+      Color.new(1.0, 1.0, 1.0, 1.0),
+      Color.new(1.0, 0.0, 0.0, 1.0),
+      Color.new(0.0, 1.0, 0.0, 1.0),
+      Color.new(0.0, 0.0, 1.0, 1.0),
+      Color.new(1.0, 1.0, 0.0, 1.0),
+      Color.new(1.0, 0.0, 1.0, 1.0),
+      Color.new(0.0, 1.0, 1.0, 1.0),
+      Color.new(0.1, 0.5, 0.0, 1.0),
+      Color.new(0.0, 0.0, 0.5, 1.0),
+      Color.new(0.5, 0.0, 0.5, 1.0),
+    ]
 
     def initialize(width, height)
       @maxx = width - 1
       @maxy = height - 1
 
-      @cells = Hash.new { |hash, pos| hash[pos] = Tile.new(pos) }
+      @tiles = Hash.new { |hash, pos| hash[pos] = Tile.new(pos) }
 
       @entities = []
 
@@ -28,7 +42,7 @@ module YOGO
 
     def [](pos)
       return nil unless in_range?(pos)
-      @cells[pos]
+      @tiles[pos]
     end
 
     def in_range?(pos)
@@ -36,11 +50,40 @@ module YOGO
       (x >= 0 && x <= @maxx) && (y >= 0 && y <= @maxy)
     end
 
+    def world_gen_update(world)
+      @capitals.each do |capital|
+        capital.tile[:claims] ||= {}
+        capital.tile[:claims][capital.owner] ||= 0.0
+        capital.tile[:claims][capital.owner] += 4000.0
+      end
+      0.upto(@maxx) do |x|
+        0.upto(@maxy) do |y|
+          pos = [x,y]
+          tile = self[pos]
+          tile[:state] = @capitals.sort_by { |capital|
+            dx = capital.tile.x - x
+            dy = capital.tile.y - y
+            dist = (dx ** 2) + (dy ** 2)
+          }.first.owner
+          @unmapped -= 1
+          # tile[:claims][tile[:state]] += 2.0 if tile[:state]
+          # tile.world_gen_update(self)
+          # if tile.state.nil? then
+          #   winner = tile[:claims].find { |country, claim| claim >= 1.0 }
+          #   if winner then
+          #     tile[:state] = winner[0]
+          #     @unmapped -= 1
+          #   end
+          # end
+        end
+      end
+    end
+
     def update(world)
       @entities.each do |entity|
         entity.update(world)
       end
-      @cells.each do |pos, cell|
+      @tiles.each do |pos, cell|
         cell.update(world)
       end
     end
@@ -102,6 +145,7 @@ module YOGO
 
     def generate_countries_and_capitals
       idx = 1
+      @capitals = []
       (width/4).times do
         pos = self[[ Kernel::rand(@maxx), Kernel::rand(@maxy) ]]
         while pos.terrain == :water || !pos.resource.nil? || !pos.structure.nil? do
@@ -109,6 +153,7 @@ module YOGO
         end
 
         country = Entity::Country.new
+        country.color = COUNTRY_COLOURS[idx]
         @entities << country
 
         city = Structure.create(:city, pos)
@@ -116,9 +161,15 @@ module YOGO
         city.population = 1.0 + Kernel::rand(5.0)
         city.name = "City #{idx}"
         pos[:structure] = city
+        pos[:state] = country
+
+        @capitals << city
 
         idx += 1
       end
+
+      @unmapped = (width * height) - @capitals.length
+      # @unmapped = 0
     end
 
   end

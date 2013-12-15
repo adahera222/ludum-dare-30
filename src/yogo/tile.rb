@@ -33,6 +33,9 @@ module YOGO
                                             },
                         :inundation =>      { :hills => 3.0,
                                               :mountain => 5.0
+                                            },
+                        :claims =>          { :water => 5.0,
+                                              :mountain => 2.0
                                             }
                       }
 
@@ -58,7 +61,9 @@ module YOGO
       @data = { :terrain => :water,
                 :water_pollution => 0.0,
                 :air_pollution => 0.0,
-                :inundation => 0.0
+                :inundation => 0.0,
+                :claims => {},
+                :state => nil
       }
     end
 
@@ -92,6 +97,10 @@ module YOGO
 
     def inundation
       @data[:inundation]
+    end
+
+    def state
+      @data[:state]
     end
 
     def air_pollution_description
@@ -176,6 +185,26 @@ module YOGO
       @data[:water_pollution] = 1.0 if water_pollution > 1.0
     end
 
+    def world_gen_update(map)
+      claim_spread = {}
+      # State ownership spreads out
+      NEIGHBOURS.each do |offset|
+        pos = [x + offset[0], y + offset[1]]
+        next unless map.in_range?(pos)
+        neighbour = map[pos]
+        next if neighbour.nil?
+
+        @data[:claims].each do |country, value|
+          claim_spread[country] ||= []
+          claim_spread[country] << neighbour if (neighbour[:claims][country] || 0.0) < value
+        end
+      end
+
+      claim_spread.each do |country, neighbours|
+        spread(:claims, claim_spread[country], country, 0.001)
+      end
+    end
+
   private
 
     def pollution_description(type, value)
@@ -184,16 +213,29 @@ module YOGO
       end
     end
 
-    def spread(prop, victims)
-      orig = @data[prop]
+    def spread(prop, victims, key=nil, threshold = 0.01)
+      if key then
+        orig = @data[prop][key]
+      else
+        orig = @data[prop]
+      end
       victims.each do |tile|
-        delta = orig - tile[prop]
+        if key then
+          delta = orig - (tile[prop][key] || 0.0)
+        else
+          delta = orig - tile[prop]
+        end
         spread = delta / (victims.length + 1).to_f
         divisor = SPREAD_DIVISORS[prop][tile.terrain] || 1.0
         spread = spread / divisor
-        next if spread < 0.01
-        tile[prop] += spread
-        @data[prop] -= spread
+        next if spread < threshold
+        if key then
+          tile[prop][key] = (tile[prop][key] || 0.0) + spread
+          @data[prop][key] -= spread
+        else
+          tile[prop] += spread
+          @data[prop] -= spread
+        end
 
         # puts "Moved #{spread} #{prop} from #{@pos.inspect} (#{@data[prop].inspect} to #{tile.pos.inspect} (#{tile[prop].inspect})"
       end
