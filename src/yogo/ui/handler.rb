@@ -64,7 +64,9 @@ module YOGO
       end
 
       def turn!
-        @notices = []
+        @text = []
+        @list = []
+        immediate("A new turn begins...")
       end
 
       def notice(message)
