@@ -63,18 +63,9 @@ module YOGO
           tile[:state] = @capitals.sort_by { |capital|
             dx = capital.tile.x - x
             dy = capital.tile.y - y
-            dist = (dx ** 2) + (dy ** 2)
+            (dx ** 2) + (dy ** 2)
           }.first.owner
           @unmapped -= 1
-          # tile[:claims][tile[:state]] += 2.0 if tile[:state]
-          # tile.world_gen_update(self)
-          # if tile.state.nil? then
-          #   winner = tile[:claims].find { |country, claim| claim >= 1.0 }
-          #   if winner then
-          #     tile[:state] = winner[0]
-          #     @unmapped -= 1
-          #   end
-          # end
         end
       end
     end

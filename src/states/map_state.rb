@@ -63,7 +63,7 @@ module YOGO
         graphics.draw_string("Map generating... #{@world.map.unmapped}", container.width / 2, container.height / 2)
         reset_minimap
       else
-        # @minimap_mode = nil
+        @minimap_mode = nil
         draw_map(graphics)
         draw_sidebar(graphics)
       end

@@ -185,26 +185,6 @@ module YOGO
       @data[:water_pollution] = 1.0 if water_pollution > 1.0
     end
 
-    def world_gen_update(map)
-      claim_spread = {}
-      # State ownership spreads out
-      NEIGHBOURS.each do |offset|
-        pos = [x + offset[0], y + offset[1]]
-        next unless map.in_range?(pos)
-        neighbour = map[pos]
-        next if neighbour.nil?
-
-        @data[:claims].each do |country, value|
-          claim_spread[country] ||= []
-          claim_spread[country] << neighbour if (neighbour[:claims][country] || 0.0) < value
-        end
-      end
-
-      claim_spread.each do |country, neighbours|
-        spread(:claims, claim_spread[country], country, 0.001)
-      end
-    end
-
   private
 
     def pollution_description(type, value)
