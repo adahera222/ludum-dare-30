@@ -91,6 +91,8 @@ module YOGO
     def keyPressed(keycode, char)
       if char == 13 then
         @world.turn!
+        reset_viewport
+        reset_minimap
         return
       end
 

@@ -30,6 +30,9 @@ module YOGO
                                               :water => 0.75,
                                               :mountain => 10.0,
                                               :hills => 2.0
+                                            },
+                        :inundation =>      { :hills => 3.0,
+                                              :mountain => 5.0
                                             }
                       }
 
@@ -54,7 +57,8 @@ module YOGO
       @pos = pos
       @data = { :terrain => :water,
                 :water_pollution => 0.0,
-                :air_pollution => 0.0
+                :air_pollution => 0.0,
+                :inundation => 0.0
       }
     end
 
@@ -84,6 +88,10 @@ module YOGO
 
     def water_pollution
       @data[:water_pollution]
+    end
+
+    def inundation
+      @data[:inundation]
     end
 
     def air_pollution_description
@@ -134,18 +142,31 @@ module YOGO
         structure.update(map)
       end
 
+      if terrain == :water then
+        @data[:inundation] += 0.01 # Total inundation at ~400 turns, ~30 years at max rate.
+      else
+        if inundation > 0.5 then
+          @data[:terrain] = :water
+          @data[:resource] = nil if [ :uranium, :coal, :aluminium, :iron_ore, :arable ].include?(@data[:resource])
+          @data[:inundation] = 0.0
+        end
+      end
+
       # Pollution spreads out to tiles with lesser
       air_spread = []
       water_spread = []
+      inundation_spread = []
       NEIGHBOURS.each do |offset|
         neighbour = map[[x + offset[0], y + offset[1]]]
         next if neighbour.nil?
         air_spread << neighbour if neighbour.air_pollution < air_pollution
         water_spread << neighbour if neighbour.water_pollution < water_pollution
+        inundation_spread << neighbour if neighbour.terrain != :water && neighbour.inundation < inundation
       end
 
       spread(:air_pollution, air_spread)
       spread(:water_pollution, water_spread)
+      spread(:inundation, inundation_spread)
 
       # When tiles reach a threshold, they can loose their bonuses
       @data[:resource] = nil if resource == :arable && (air_pollution > 0.75 || water_pollution > 0.25)
