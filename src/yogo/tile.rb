@@ -33,6 +33,23 @@ module YOGO
                                             }
                       }
 
+    POLLUTION_DESCRIPTIONS = {
+      :water_pollution => { 0.05 => 'Pristine water',
+                            0.15 => 'Minor water pollution',
+                            0.20 => 'Some water pollution',
+                            0.50 => 'Heavy water pollution',
+                            0.75 => 'Toxic sludge',
+                            2.00 => 'Raw toxic waste'
+                          },
+      :air_pollution =>   { 0.05 => 'Pristine air',
+                            0.15 => 'Minor dust particles',
+                            0.20 => 'Some air pollution',
+                            0.50 => 'Heavy air pollution',
+                            0.75 => 'Noxious fumes',
+                            2.00 => 'Toxic fumes'
+                          }
+    }
+
     def initialize(pos)
       @pos = pos
       @data = { :terrain => :water,
@@ -67,6 +84,14 @@ module YOGO
 
     def water_pollution
       @data[:water_pollution]
+    end
+
+    def air_pollution_description
+      pollution_description(:air_pollution, air_pollution)
+    end
+
+    def water_pollution_description
+      pollution_description(:water_pollution, water_pollution)
     end
 
     def [](property)
@@ -124,14 +149,24 @@ module YOGO
 
       # When tiles reach a threshold, they can loose their bonuses
       @data[:resource] = nil if resource == :arable && (air_pollution > 0.75 || water_pollution > 0.25)
-      @data[:resource] = nil if resource == :fish && water_pollution > 0.10
+      @data[:resource] = nil if resource == :fish && water_pollution > 0.20
+
+      @data[:air_pollution] = 1.0 if air_pollution > 1.0
+      @data[:water_pollution] = 1.0 if water_pollution > 1.0
     end
 
   private
 
+    def pollution_description(type, value)
+      POLLUTION_DESCRIPTIONS[type].each do |limit, name|
+        return "#{name} #{sprintf('%.2f', value)}" if value <= limit
+      end
+    end
+
     def spread(prop, victims)
+      orig = @data[prop]
       victims.each do |tile|
-        delta = @data[prop] - tile[prop]
+        delta = orig - tile[prop]
         spread = delta / (victims.length + 1).to_f
         divisor = SPREAD_DIVISORS[prop][tile.terrain] || 1.0
         spread = spread / divisor

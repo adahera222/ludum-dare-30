@@ -254,9 +254,13 @@ module YOGO
       sprite = @tileset.terrain(tile.terrain)
       sprite.draw(vx, vy)
 
-      if tile[:water_pollution] > 0.05 then
-        sprite = @tileset.ui(:water_pollution)
-        sprite.draw(vx, vy, Color.new(1.0,1.0,1.0, tile[:water_pollution]))
+      if tile.water_pollution > 0.05 then
+        if tile.terrain == :water then
+          sprite = @tileset.ui(:water_pollution)
+        else
+          sprite = @tileset.ui(:land_pollution)
+        end
+        sprite.draw(vx, vy, Color.new(1.0,1.0,1.0, tile.water_pollution))
       end
 
       if tile[:resource] then
@@ -269,9 +273,9 @@ module YOGO
         sprite.draw(vx, vy)
       end
 
-      if tile[:air_pollution] > 0.05 then
+      if tile.air_pollution > 0.05 then
         sprite = @tileset.ui(:air_pollution)
-        sprite.draw(vx, vy, Color.new(1.0,1.0,1.0, tile[:air_pollution]))
+        sprite.draw(vx, vy, Color.new(1.0,1.0,1.0, tile.air_pollution))
       end
     end
 
@@ -281,15 +285,21 @@ module YOGO
       data_x = @screen_x - SIDEBAR_WIDTH + 5
       data_y = MINIMAP_WIDTH + 5
 
+      text_x = data_x + 5 + TILE_SIZE
+
       render_tile(@current_selected, data_x, data_y)
-      graphics.draw_string(@current_selected.terrain_name, data_x + 5 + TILE_SIZE, data_y)
+      graphics.draw_string(@current_selected.terrain_name, text_x, data_y)
 
       if @current_selected[:resource] then
-        graphics.draw_string(@current_selected.resource_name, data_x + 5 + TILE_SIZE, data_y + 16)
+        graphics.draw_string(@current_selected.resource_name, text_x, data_y + 16)
       end
 
+      graphics.draw_string(@current_selected.air_pollution_description, text_x, data_y + TILE_SIZE + 5)
+      graphics.draw_string(@current_selected.water_pollution_description, text_x, data_y + TILE_SIZE + 5 + 16)
+
+
       buttons_x = data_x
-      buttons_y = data_y + TILE_SIZE + 5
+      buttons_y = data_y + (2 * (TILE_SIZE + 5))
 
       tile_buffer = Image.new(TILE_SIZE, TILE_SIZE)
       graphics.copy_area(tile_buffer, data_x, data_y)
