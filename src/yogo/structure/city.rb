@@ -45,6 +45,8 @@ module YOGO
         growth_rate -= 0.015 unless @owner.consume!(:oil, (@population * 2.0).ceil, world)
 
         @population *= growth_rate
+
+        @tile.state.risk_assessment(:inundation, @tile.inundation, self)
       end
 
     end
