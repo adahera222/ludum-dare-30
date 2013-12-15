@@ -1,38 +1,16 @@
 module YOGO
   module Structure
 
-    NAMES = {
-      :mine => 'Mine',
-      :factory => 'Factory',
-      :power_station => 'Power Station',
-      :well => 'Well',
-      :farm => 'Farm'
-    }
-
     def self.name(type)
-      NAMES[type]
+      STRUCTURES[type].name
+    end
+
+    def self.description(type)
+      STRUCTURES[type].description
     end
 
     def self.create(type, pos)
-      klass = case type
-              when :mine, :well
-                Mine
-              when :city
-                City
-              when :farm
-                Farm
-              when :power_station
-                PowerStation
-              # when :nuclear_plant
-              #   NuclearPlant
-              # when :wind_farm
-              #   WindFarm
-              # when :solar_farm
-              #   SolarFarm
-              # when :factory
-              #   Factory
-              end
-
+      klass = STRUCTURES[type]
       klass.new(type, pos)
     end
 
@@ -55,7 +33,7 @@ module YOGO
       end
 
       def name
-        NAMES[@type]
+        Structure.name(@type)
       end
 
       def owner=(owner)

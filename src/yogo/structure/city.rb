@@ -13,6 +13,10 @@ module YOGO
         @population = 1.0
       end
 
+      def self.name
+        "City"
+      end
+
       def name
         # "#{@name} [#{citizens}]"
         "#{@name} [#{sprintf('%.2f', @population)}]"

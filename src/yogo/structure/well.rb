@@ -2,32 +2,32 @@ require 'yogo/structure/base'
 
 module YOGO
   module Structure
-    class Mine < Base
+    class Well < Base
 
       def self.name
-        "Mine"
+        "Well"
       end
 
       def self.description
-        "+5 iron or coal"
+        "+5 oil"
       end
 
       def self.valid_tile?(tile)
-        [ :coal, :iron ].include?(tile.resource)
+        tile.resource == :oil
       end
 
       def production
-        { @tile.resource => 5 }
+        { :oil => 5 }
       end
 
       def causes
         { :air_pollution => 0.01 * @production,
-          :water_pollution => 0.1 * @production
+          :water_pollution => 0.2 * @production
         }
       end
 
       def update(world)
-        @running_cost = 10.0
+        @running_cost = 3.0
 
         super
       end

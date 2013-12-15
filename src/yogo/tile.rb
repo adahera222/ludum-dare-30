@@ -134,15 +134,18 @@ module YOGO
     def valid_structures
       return [] if structure
       list = []
-      case terrain
-      when :grass, :hills, :mountains
-        list += [ :farm, :power_station ]
-        list << :mine if [ :coal, :iron, :aluminium, :uranium ].include?(@data[:resource])
-        list << :well if @data[:resource] == :oil
-      else
-        list << :fishing_fleet if @data[:resource] == :fish
-        list << :platform if @data[:resource] == :oil
+      Structure::STRUCTURES.each do |type, klass|
+        list << type if klass.respond_to?(:valid_tile?) && klass.valid_tile?(self)
       end
+      # case terrain
+      # when :grass, :hills, :mountains
+      #   list += [ :farm, :power_station ]
+      #   list << :mine if [ :coal, :iron, :aluminium, :uranium ].include?(@data[:resource])
+      #   list << :well if @data[:resource] == :oil
+      # else
+      #   list << :fishing_fleet if @data[:resource] == :fish
+      #   list << :platform if @data[:resource] == :oil
+      # end
       list
     end
 

@@ -4,6 +4,18 @@ module YOGO
   module Structure
     class Farm < Base
 
+      def self.name
+        "Farm"
+      end
+
+      def self.description
+        "+3 food"
+      end
+
+      def self.valid_tile?(tile)
+        tile.terrain != :water
+      end
+
       def production
         { :food => 3 }
       end

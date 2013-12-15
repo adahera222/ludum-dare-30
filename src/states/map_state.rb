@@ -13,13 +13,12 @@ module YOGO
 
     KEYS = {
       'm' => [ :mine, :well ],
-      'i' => [ :sawmill ],
       'f' => [ :farm, :fishing_fleet ],
-      'p' => [ :power_station ],
+      'p' => [ :coal_power_station ],
+      'o' => [ :oil_power_station ],
       'n' => [ :nuclear_power ],
       'b' => [ :wind_farm ],
-      'l' => [ :plantation ],
-      'o' => [ :foundry ]
+      'y' => [ :foundry ]
     }
 
     def getID
@@ -429,6 +428,7 @@ module YOGO
           tile_buffer.draw(vx, vy)
           @tileset.structure(type).draw(vx, vy)
           graphics.draw_string("(#{key[0]}) #{Structure.name(type)}", vx + 5 + TILE_SIZE, vy)
+          graphics.draw_string(Structure.description(type), vx + 5 + TILE_SIZE, vy + 16)
         end
       else
         # Show the structure details

@@ -2,14 +2,26 @@ require 'yogo/structure/base'
 
 module YOGO
   module Structure
-    class PowerStation < Base
+    class CoalPowerStation < Base
+
+      def self.name
+        "Coal Power Station"
+      end
+
+      def self.description
+        "5 coal -> 10 power"
+      end
+
+      def self.valid_tile?(tile)
+        tile.terrain != :water
+      end
 
       def production
         { :power => 10 * @production }
       end
 
       def causes
-        { :air_pollution => 0.1 * @production,
+        { :air_pollution => 0.15 * @production,
           :water_pollution => 0.005 * @production
         }
       end

@@ -125,6 +125,7 @@ module YOGO
                   tile[:terrain] = :grass
                   tile[:resource] = nil
                   tile[:resource] = :arable if Kernel::rand < 0.50
+                  tile[:resource] = :oil if Kernel::rand < 0.025
                 end
               end
             end

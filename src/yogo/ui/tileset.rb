@@ -6,7 +6,7 @@ module YOGO
 
       TERRAIN = [ :water, :grass, :hills, :mountains ]
       RESOURCES = [ :oil, :coal, :iron, :uranium, :aluminum, :fish, :arable, :blank ]
-      STRUCTURES = [ :mine, :power_station, :factory, :well, :farm, :fishing_fleet, :platform, :plantation, :wind_farm, :solar_farm, :nuclear_plant, :dock, :city ]
+      STRUCTURES = [ :mine, :coal_power_station, :factory, :well, :farm, :fishing_fleet, :platform, :plantation, :wind_farm, :solar_farm, :nuclear_plant, :oil_power_station, :city ]
       UI = [ :selected, :production, :power, :land_pollution, :air_pollution, :water_pollution, :cash, :swamp ]
 
       TERRAIN_COLORS = { :water => Color.new(14, 53, 75, 255),
