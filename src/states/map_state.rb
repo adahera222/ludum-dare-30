@@ -227,7 +227,7 @@ module YOGO
             elsif tile[:resource] then
               color = @tileset.resource_color(tile[:resource])
             else
-              color = @tileset.terrain_color(tile[:terrain])
+              color = @tileset.terrain_color(tile.terrain)
             end
             graphics.set_color(color)
             graphics.fill_rect(vx, vy, w, h)
@@ -251,7 +251,7 @@ module YOGO
     end
 
     def render_tile(tile, vx, vy)
-      sprite = @tileset.terrain(tile[:terrain])
+      sprite = @tileset.terrain(tile.terrain)
       sprite.draw(vx, vy)
 
       if tile[:water_pollution] > 0.05 then
