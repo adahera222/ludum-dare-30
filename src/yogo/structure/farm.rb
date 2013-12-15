@@ -9,6 +9,7 @@ module YOGO
       end
 
       def update(world)
+        @running_cost = 1.0
         super
 
         # Trees, stuff like that to absorb the pollution

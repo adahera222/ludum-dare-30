@@ -46,6 +46,9 @@ module YOGO
         @tile = tile
 
         @owner = nil
+
+        @production = 1.0
+        @running_cost = 0
       end
 
       def name
@@ -53,8 +56,10 @@ module YOGO
       end
 
       def update(map)
+        @owner.balance -= @running_cost
+
         production.each do |commodity, quantity|
-          @owner.stockpile[commodity] += quantity
+          @owner.store(commodity, quantity, @running_cost / quantity) unless quantity <= 0
         end
       end
 

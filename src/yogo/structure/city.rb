@@ -36,11 +36,11 @@ module YOGO
         growth_rate = 1.0
 
         # Growth rates at ~3-6% per year
-        growth_rate += 0.03 if world.market.purchase!(:food, @population.ceil, @owner)
-        growth_rate -= 0.03 unless world.market.purchase!(:power, (@population * 2.0).ceil, @owner)
-        growth_rate += 0.015 if world.market.purchase!(:timber, @population.ceil, @owner)
-        growth_rate += 0.015 if world.market.purchase!(:steel, @population.ceil, @owner)
-        growth_rate -= 0.015 unless world.market.purchase!(:oil, (@population * 2.0).ceil, @owner)
+        growth_rate += 0.03 if @owner.consume!(:food, @population.ceil, world)
+        growth_rate -= 0.03 unless @owner.consume!(:power, (@population * 2.0).ceil, world)
+        growth_rate += 0.015 if @owner.consume!(:timber, @population.ceil, world)
+        growth_rate += 0.015 if @owner.consume!(:steel, @population.ceil, world)
+        growth_rate -= 0.015 unless @owner.consume!(:oil, (@population * 2.0).ceil, world)
 
         @population *= growth_rate
       end

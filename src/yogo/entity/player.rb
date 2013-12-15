@@ -11,9 +11,11 @@ module YOGO
       end
 
       def update(world)
-        @stockpile.each do |commodity, stock|
-          world.market.offer(commodity, stock, 10, self)
-          @stockpile[commodity] = 0
+        @stockpile.each do |commodity, data|
+          stock = data[:stock]
+          price = data[:cost] * 1.10   # Default 10% margin
+          world.market.offer(commodity, stock, price, self)
+          @stockpile[commodity][:stock] = 0
         end
         puts "BALANCE: #{@balance}"
       end

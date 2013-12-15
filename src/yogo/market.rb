@@ -15,11 +15,13 @@ module YOGO
     def purchase(commodity, quantity, owner)
       quantity = quantity.ceil
       fulfilled = 0
+      total_price = 0
       @stocks[commodity][:offers].each_with_index do |offer, idx|
         consumed = [ offer[:available], quantity ].min
         offer[:available] -= consumed
         owner.balance -= consumed * offer[:price]
         offer[:owner].balance += consumed * offer[:price]
+        total_price += consumed * offer[:price]
         fulfilled += consumed
         @stocks[commodity][:available] -= consumed
 
@@ -32,7 +34,7 @@ module YOGO
       @stocks[commodity][:offers].compact!
       @demand[commodity] += (quantity - fulfilled)
 
-      fulfilled
+      { :fulfilled => fulfilled, :price => total_price, :unit_price => total_price.to_f / fulfilled.to_f }
     end
 
     def purchase!(commodity, quantity, owner)
