@@ -50,6 +50,7 @@ module YOGO
       @sidebar_background = Color.new(0.2, 0.2, 0.2, 1.0)
       @minimap_background = Color.new(0.1, 0.1, 0.1, 1.0)
       @minimap_rect = Color.new(1.0,1.0,1.0,0.8)
+      @font_color = Color.new(1.0,1.0,1.0,1.0)
     end
 
     def render(container, game, graphics)
@@ -200,20 +201,25 @@ module YOGO
     def draw_sidebar(graphics)
       sidebar_x = @screen_x - SIDEBAR_WIDTH
 
-      minimap_x = sidebar_x + 2
-      minimap_y = 2
-
       graphics.set_color(@sidebar_background)
       graphics.fill_rect(sidebar_x, 0, SIDEBAR_WIDTH, @screen_y)
+
+      sprite = @tileset.ui(:cash)
+      sprite.draw(sidebar_x + 2, 2)
+      graphics.set_color(@font_color)
+      graphics.draw_string(@world.player.balance.to_i.to_s, sidebar_x + 2 + 4 + TILE_SIZE, 10)
+
+      minimap_x = sidebar_x + 2
+      minimap_y = 2 + TILE_SIZE + 5
 
       w = (MINIMAP_WIDTH / @map.width).floor
       h = (MINIMAP_WIDTH / @map.height).floor
 
       if @minimap_buffer then
-        @minimap_buffer.draw(sidebar_x + 2, 2)
+        @minimap_buffer.draw(minimap_x, minimap_y)
       else
         mx = sidebar_x + 2
-        my = 2
+        my = minimap_y
 
         graphics.set_color(@minimap_background)
         graphics.fill_rect(mx,my, MINIMAP_WIDTH, MINIMAP_WIDTH)
@@ -235,12 +241,12 @@ module YOGO
             graphics.fill_rect(vx, vy, w, h)
             vy += h
           end
-          vy = 2
+          vy = minimap_y
           vx += w
         end
 
         @minimap_buffer = Image.new(MINIMAP_WIDTH, MINIMAP_WIDTH)
-        graphics.copy_area(@minimap_buffer, sidebar_x + 2, 2)
+        graphics.copy_area(@minimap_buffer, minimap_x, minimap_y)
       end
 
       graphics.set_color(@minimap_rect)
@@ -288,6 +294,8 @@ module YOGO
       data_y = MINIMAP_WIDTH + 5
 
       text_x = data_x + 5 + TILE_SIZE
+
+      graphics.set_color(@font_color)
 
       render_tile(@current_selected, data_x, data_y)
       graphics.draw_string(@current_selected.terrain_name, text_x, data_y)
