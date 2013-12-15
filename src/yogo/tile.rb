@@ -137,9 +137,9 @@ module YOGO
       list
     end
 
-    def update(map)
+    def update(world)
       if structure then
-        structure.update(map)
+        structure.update(world)
       end
 
       if terrain == :water then
@@ -157,7 +157,7 @@ module YOGO
       water_spread = []
       inundation_spread = []
       NEIGHBOURS.each do |offset|
-        neighbour = map[[x + offset[0], y + offset[1]]]
+        neighbour = world.map[[x + offset[0], y + offset[1]]]
         next if neighbour.nil?
         air_spread << neighbour if neighbour.air_pollution < air_pollution
         water_spread << neighbour if neighbour.water_pollution < water_pollution

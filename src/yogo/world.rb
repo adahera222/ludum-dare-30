@@ -1,4 +1,5 @@
 require 'yogo/map'
+require 'yogo/market'
 require 'yogo/structure/all'
 
 module YOGO
@@ -6,17 +7,21 @@ module YOGO
     attr_reader :player
     attr_accessor :ui_handler
 
-    attr_reader :map
+    attr_reader :map, :market
 
     def initialize
       @map = Map.new(40,40)
+      @market = Market.new
       @turn = 0
     end
 
     def turn!
       @turn += 1
       puts "Turn: #{@turn}"
-      @map.update!
+      @market.update(self)
+      @map.update(self)
+
+      puts @market.demand.inspect
     end
   end
 end

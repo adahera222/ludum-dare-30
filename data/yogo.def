@@ -220,7 +220,7 @@ yogo.png
 	0
 }
 {
-	terrain_0.png
+	structures_12.png
 	206
 	70
 	32
@@ -231,8 +231,19 @@ yogo.png
 	0
 }
 {
-	terrain_1.png
+	terrain_0.png
 	2
+	104
+	32
+	32
+	0
+	0
+	0
+	0
+}
+{
+	terrain_1.png
+	36
 	104
 	32
 	32
@@ -243,7 +254,7 @@ yogo.png
 }
 {
 	terrain_2.png
-	36
+	70
 	104
 	32
 	32
@@ -254,7 +265,7 @@ yogo.png
 }
 {
 	terrain_3.png
-	70
+	104
 	104
 	32
 	32
@@ -265,7 +276,7 @@ yogo.png
 }
 {
 	terrain_4.png
-	104
+	138
 	104
 	32
 	32
@@ -276,17 +287,6 @@ yogo.png
 }
 {
 	ui_0.png
-	138
-	104
-	32
-	32
-	0
-	0
-	0
-	0
-}
-{
-	ui_1.png
 	172
 	104
 	32
@@ -297,7 +297,7 @@ yogo.png
 	0
 }
 {
-	ui_2.png
+	ui_1.png
 	206
 	104
 	32
@@ -308,7 +308,7 @@ yogo.png
 	0
 }
 {
-	ui_3.png
+	ui_2.png
 	2
 	138
 	32
@@ -319,7 +319,7 @@ yogo.png
 	0
 }
 {
-	ui_4.png
+	ui_3.png
 	36
 	138
 	32
@@ -330,8 +330,19 @@ yogo.png
 	0
 }
 {
-	ui_5.png
+	ui_4.png
 	70
+	138
+	32
+	32
+	0
+	0
+	0
+	0
+}
+{
+	ui_5.png
+	104
 	138
 	32
 	32

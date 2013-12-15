@@ -17,6 +17,8 @@ module YOGO
       klass = case type
               when :mine, :well
                 Mine
+              when :city
+                City
               # when :farm
               #   Farm
               # when :power_station
@@ -48,6 +50,10 @@ module YOGO
 
       def name
         NAMES[@type]
+      end
+
+      def update(map)
+        # NOOP
       end
 
       # def production

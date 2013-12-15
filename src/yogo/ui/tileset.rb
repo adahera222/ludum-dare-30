@@ -6,7 +6,7 @@ module YOGO
 
       TERRAIN = [ :water, :grass, :hills, :mountains, :swamp ]
       RESOURCES = [ :oil, :coal, :iron, :uranium, :aluminum, :fish, :arable, :blank ]
-      STRUCTURES = [ :mine, :power_station, :factory, :well, :farm, :fishing_fleet, :platform, :plantation, :wind_farm, :solar_farm, :nuclear_plant, :dock ]
+      STRUCTURES = [ :mine, :power_station, :factory, :well, :farm, :fishing_fleet, :platform, :plantation, :wind_farm, :solar_farm, :nuclear_plant, :dock, :city ]
       UI = [ :selected, :production, :power, :land_pollution, :air_pollution, :water_pollution ]
 
       TERRAIN_COLORS = { :water => Color.new(14, 53, 75, 255),
@@ -76,8 +76,12 @@ module YOGO
         RESOURCE_COLORS[type] || RESOURCE_COLORS[:blank]
       end
 
-      def structure_color
-        @structure_color ||= Color.new(255,255,0,255)
+      def structure_color(type)
+        if type == :city then
+          @city_color ||= Color.new(1.0,0.0,1.0,1.0)
+        else
+          @structure_color ||= Color.new(1.0,1.0,0.0,1.0)
+        end
       end
 
       def selected

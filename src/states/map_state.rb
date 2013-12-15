@@ -224,10 +224,10 @@ module YOGO
         0.upto(@map.maxx) do |x|
           0.upto(@map.maxy) do |y|
             tile = @map[[x,y]]
-            if tile[:structure] then
-              color = @tileset.structure_color
-            elsif tile[:resource] then
-              color = @tileset.resource_color(tile[:resource])
+            if tile.structure then
+              color = @tileset.structure_color(tile.structure)
+            elsif tile.resource then
+              color = @tileset.resource_color(tile.resource)
             else
               color = @tileset.terrain_color(tile.terrain)
             end

@@ -32,9 +32,9 @@ module YOGO
       (x >= 0 && x <= @maxx) && (y >= 0 && y <= @maxy)
     end
 
-    def update!
+    def update(world)
       @cells.each do |pos, cell|
-        cell.update(self)
+        cell.update(world)
       end
     end
 
@@ -42,12 +42,7 @@ module YOGO
 
     def random!
       generate_tectonic_plates
-
-      # TODO: Scatter resources randomly on the map
-      # TODO: Decide sea level to give ~70% water
-      # TODO: Seed rainfall based upon evaporation, expands to hit
-      #       mountains
-      # TODO: Rainfall on regions will produce rivers flowing ever lower
+      generate_countries_and_capitals
     end
 
     # TODO: Generate random plates and give them a height
@@ -95,6 +90,24 @@ module YOGO
             end
           end
         end
+      end
+    end
+
+    def generate_countries_and_capitals
+      idx = 1
+      (width/4).times do
+        pos = self[[ Kernel::rand(@maxx), Kernel::rand(@maxy) ]]
+        while pos.terrain == :water || !pos.resource.nil? || !pos.structure.nil? do
+          pos = self[[ Kernel::rand(@maxx), Kernel::rand(@maxy) ]]
+        end
+
+        city = Structure.create(:city, pos)
+        # city.owner = country
+        city.population = 1.0 + Kernel::rand(5.0)
+        city.name = "City #{idx}"
+        pos[:structure] = city
+
+        idx += 1
       end
     end
 
