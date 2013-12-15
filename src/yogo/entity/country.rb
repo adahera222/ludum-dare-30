@@ -91,9 +91,9 @@ module YOGO
             @taxes[detail] += alter
             @taxes[detail] = 0.0 if @taxes[detail] < 0.0
             @lobby[detail][:accumulated] = 0.0
-          end
 
-          world.ui_handler.notice("#{self.name} has changed their #{detail} tax rate to #{sprintf('$%.2f per 1 unit', @taxes[detail])}") if world
+            world.ui_handler.notice("#{self.name} has changed their #{detail} tax rate to #{sprintf('$%.2f per 1 unit', @taxes[detail])}") if world
+          end
         end
       end
 
