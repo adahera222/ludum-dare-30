@@ -13,7 +13,19 @@ module YOGO
         reset_lobby_values
 
         @taxes = { :air_pollution => 0.0, :water_pollution => 0.0 }
-        consider_regulations
+        consider_regulations(nil)
+      end
+
+      def name
+        "Unknownistan"
+      end
+
+      def air_pollution_tax
+        @taxes[:air_pollution]
+      end
+
+      def water_pollution_tax
+        @taxes[:water_pollution]
       end
 
       # Country have limitless budgets
@@ -35,10 +47,10 @@ module YOGO
       end
 
       def update(world)
-        consider_regulations
-        puts "#{@statistics.inspect}"
-        puts "#{@lobby.inspect}"
-        puts "#{@taxes.inspect}"
+        consider_regulations(world)
+        puts "STATS: #{@statistics.inspect}"
+        puts "LOBBY: #{@lobby.inspect}"
+        puts "TAX: #{@taxes.inspect}"
         reset_statistics
       end
 
@@ -55,16 +67,20 @@ module YOGO
         }
       end
 
-      def consider_regulations
+      def consider_regulations(world)
         inundation_panic = @statistics[:inundation] / 0.25
 
         [ :air_pollution, :water_pollution ].each do |detail|
           @lobby[detail][:accumulated] += @lobby[detail][:sway]
+          @lobby[detail][:accumulated] += inundation_panic * 0.1
           if @lobby[detail][:accumulated].abs >= 1.0 then
-            alter = (@lobby[detail][:accumulated] * inundation_panic * 0.1)
+            alter = (@lobby[detail][:accumulated] * inundation_panic)
             @taxes[detail] += alter
             @taxes[detail] = 0.0 if @taxes[detail] < 0.0
+            @lobby[detail][:accumulated] = 0.0
           end
+
+          world.ui_handler.notice("#{self.name} has changed their #{detail} tax rate to #{sprintf('$%.2f per 1 unit', @taxes[detail])}") if world
         end
       end
 

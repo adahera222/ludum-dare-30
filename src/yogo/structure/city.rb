@@ -38,11 +38,43 @@ module YOGO
         growth_rate = 1.0
 
         # Growth rates at ~3-6% per year
-        growth_rate += 0.03 if @owner.consume!(:food, @population.ceil, world)
-        growth_rate -= 0.03 unless @owner.consume!(:power, (@population * 2.0).ceil, world)
-        growth_rate += 0.015 if @owner.consume!(:timber, @population.ceil, world)
-        growth_rate += 0.015 if @owner.consume!(:steel, @population.ceil, world)
-        growth_rate -= 0.015 unless @owner.consume!(:oil, (@population * 2.0).ceil, world)
+        if @owner.consume!(:food, @population.ceil, world)
+          growth_rate += 0.03
+        else
+          world.ui_handler.location_alert("#{self.name} are starving!", @tile)
+          @notes << 'Starvation'
+          @icons << :starvation
+        end
+
+        unless @owner.consume!(:power, (@population * 2.0).ceil, world)
+          growth_rate -= 0.03
+          world.ui_handler.location_alert("#{self.name} has now power!", @tile)
+          @notes << 'No Power'
+          @icons << :no_power
+        end
+
+        if @owner.consume!(:timber, @population.ceil, world)
+          growth_rate += 0.015
+        else
+          world.ui_handler.location_alert("#{self.name} can't grow due to a lack of timber", @tile)
+          @notes << 'No Timber'
+          @icons << :no_timber
+        end
+
+        if @owner.consume!(:steel, @population.ceil, world)
+          growth_rate += 0.015
+        else
+          world.ui_handler.location_alert("#{self.name} can't grow due to a lack of steel", @tile)
+          @notes << 'No Steel'
+          @icons << :no_steel
+        end
+
+        unless @owner.consume!(:oil, (@population * 2.0).ceil, world)
+          growth_rate -= 0.015
+          world.ui_handler.location_alert("#{self.name} has a transport crisis due to no oil", @tile)
+          @notes << 'No Oil'
+          @icons << :no_oil
+        end
 
         @population *= growth_rate
 

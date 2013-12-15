@@ -158,6 +158,10 @@ module YOGO
         if inundation > 0.5 then
           @data[:terrain] = :water
           @data[:resource] = nil if [ :uranium, :coal, :aluminium, :iron_ore, :arable ].include?(@data[:resource])
+          unless valid_structures.include?(@data[:structure].type)
+            world.ui_handler.location_alert("Your #{@data[:structure].name} was destroyed by rising waters", @data[:structure].tile)
+            @data[:structure] = nil
+          end
           @data[:inundation] = 0.0
         end
       end

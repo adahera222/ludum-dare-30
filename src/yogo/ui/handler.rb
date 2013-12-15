@@ -6,10 +6,12 @@ module YOGO
 
       TEXT_SHOW_SECONDS = 10
 
+      attr_accessor :active
       attr_reader :text
 
       def initialize
         @text = []
+        @active = false
       end
 
       def tileset
@@ -23,9 +25,26 @@ module YOGO
         }.compact
       end
 
+      def render(container, graphics)
+        if @active then
+        end
+      end
+
+      def turn!
+        @notices = []
+      end
+
       def show_text(pos, content)
         text = { :pos => pos, :content => content, :expires => TEXT_SHOW_SECONDS * 1000 }
         @text << text
+      end
+
+      def notice(messasge)
+        # TODO: Show a history item
+      end
+
+      def location_alert(message, tile)
+        # TODO: Show a history item that takes you to this spot
       end
 
     end

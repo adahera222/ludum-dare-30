@@ -33,6 +33,7 @@ module YOGO
 
     def turn!
       @turn += 1
+      @ui_handler.turn!
       puts "---------"
       puts "Turn: #{@turn}"
       @market.update(self)

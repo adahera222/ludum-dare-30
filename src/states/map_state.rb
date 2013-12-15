@@ -19,7 +19,7 @@ module YOGO
       'n' => [ :nuclear_power ],
       'b' => [ :wind_farm ],
       'l' => [ :plantation ],
-      'o' => [ :dock, :foundry ]
+      'o' => [ :foundry ]
     }
 
     def getID
@@ -396,6 +396,15 @@ module YOGO
         end
         structure.causes.each do |effect, quantity|
           graphics.draw_string("Produces #{sprintf('%0.2f', quantity)} #{effect}", vx, vy)
+          vy += 15
+        end
+
+        if structure.is_a?(Structure::City) then
+          graphics.draw_string("TAX RATES", vx, vy)
+          vy += 15
+          graphics.draw_string(sprintf("Air: $%.2f per 1", structure.owner.air_pollution_tax), vx, vy)
+          vy += 15
+          graphics.draw_string(sprintf("Water: $%.2f per 1 unit", structure.owner.water_pollution_tax), vx, vy)
           vy += 15
         end
 

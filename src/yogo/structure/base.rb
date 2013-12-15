@@ -38,7 +38,7 @@ module YOGO
 
     class Base
 
-      attr_reader :type, :tile
+      attr_reader :type, :tile, :notes, :icons
       attr_accessor :owner
 
       def initialize(type, tile)
@@ -49,6 +49,9 @@ module YOGO
 
         @production = 1.0
         @running_cost = 0
+
+        @notes = []
+        @icons = []
       end
 
       def name
@@ -64,6 +67,9 @@ module YOGO
       end
 
       def update(world)
+        @notes = []
+        @icons = []
+
         causes.each do |detail, effect|
           @tile[detail] += effect
           @running_cost += @tile.state.cost_impact(detail, effect, self)
