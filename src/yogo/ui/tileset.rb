@@ -4,10 +4,10 @@ module YOGO
   module UI
     class Tileset
 
-      TERRAIN = [ :water, :grass, :hills, :mountains, :swamp ]
+      TERRAIN = [ :water, :grass, :hills, :mountains ]
       RESOURCES = [ :oil, :coal, :iron, :uranium, :aluminum, :fish, :arable, :blank ]
       STRUCTURES = [ :mine, :power_station, :factory, :well, :farm, :fishing_fleet, :platform, :plantation, :wind_farm, :solar_farm, :nuclear_plant, :dock, :city ]
-      UI = [ :selected, :production, :power, :land_pollution, :air_pollution, :water_pollution, :cash ]
+      UI = [ :selected, :production, :power, :land_pollution, :air_pollution, :water_pollution, :cash, :swamp ]
 
       TERRAIN_COLORS = { :water => Color.new(14, 53, 75, 255),
                          :grass => Color.new(69, 145, 26, 255),

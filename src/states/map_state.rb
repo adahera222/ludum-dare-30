@@ -13,7 +13,6 @@ module YOGO
 
     KEYS = {
       'm' => [ :mine, :well ],
-      # 'c' => [ :factory ],
       'i' => [ :sawmill ],
       'f' => [ :farm, :fishing_fleet ],
       'p' => [ :power_station ],
@@ -287,6 +286,11 @@ module YOGO
     def render_tile(tile, vx, vy)
       sprite = @tileset.terrain(tile.terrain)
       sprite.draw(vx, vy)
+
+      if tile.terrain != :water && tile.inundation > 0.25 then
+        sprite = @tileset.ui(:swamp)
+        sprite.draw(vx, vy, Color.new(1.0,1.0,1.0, tile.inundation * 2.0))
+      end
 
       if tile.water_pollution > 0.05 then
         if tile.terrain == :water then

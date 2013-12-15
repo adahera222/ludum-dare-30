@@ -136,7 +136,7 @@ module YOGO
       list = []
       case terrain
       when :grass, :hills, :mountains
-        list += [ :farm, :factory, :power_station ]
+        list += [ :farm, :power_station ]
         list << :mine if [ :coal, :iron, :aluminium, :uranium ].include?(@data[:resource])
         list << :well if @data[:resource] == :oil
       else
