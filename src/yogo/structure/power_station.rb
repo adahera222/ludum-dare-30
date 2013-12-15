@@ -18,7 +18,7 @@ module YOGO
         super
 
         @tile[:air_pollution] += 0.1 * @production
-        @tile[:water_pollution] += 0.005
+        @tile[:water_pollution] += 0.005 * @production
       end
 
     end
