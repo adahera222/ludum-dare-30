@@ -9,7 +9,8 @@ module YOGO
       end
 
       def update(world)
-        # TODO: Give production into the Owner's stockpile
+        super
+
         # Create pollution on the tile we are on
         @tile[:water_pollution] += 0.1
         @tile[:air_pollution] += 0.01

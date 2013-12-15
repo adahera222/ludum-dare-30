@@ -19,8 +19,8 @@ module YOGO
                 Mine
               when :city
                 City
-              # when :farm
-              #   Farm
+              when :farm
+                Farm
               # when :power_station
               #   PowerStation
               # when :nuclear_plant
@@ -53,15 +53,13 @@ module YOGO
       end
 
       def update(map)
-        # NOOP
+        production.each do |commodity, quantity|
+          @owner.stockpile[commodity] += quantity
+        end
       end
 
       # def production
       #   case @type
-      #   when :mine, :well
-      #     { @tile[:resource] => 5 }
-      #   when :farm
-      #     { :food => 5 }
       #   when :power_station
       #     { :power => 10 }
       #   when :nuclear_plant

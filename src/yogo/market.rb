@@ -42,7 +42,8 @@ module YOGO
     def offer(commodity, quantity, price, owner)
       @stocks[commodity][:available] += quantity
       @stocks[commodity][:offers] << { :owner => owner, :price => price, :available => quantity }
-      @stocks[commodity][:offers].sort_by! { |offer| offer.price }
+      @stocks[commodity][:offers].sort_by! { |offer| offer[:price] }
+      puts @stocks[commodity].inspect
     end
 
   private

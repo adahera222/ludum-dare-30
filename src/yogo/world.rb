@@ -1,6 +1,8 @@
 require 'yogo/map'
 require 'yogo/market'
 require 'yogo/structure/all'
+require 'yogo/entity/player'
+# require 'yogo/entity/corporation'
 
 module YOGO
   class World
@@ -12,6 +14,10 @@ module YOGO
     def initialize
       @map = Map.new(40,40)
       @market = Market.new
+
+      @player = Entity::Player.new
+      @map.entities << @player
+
       @turn = 0
     end
 

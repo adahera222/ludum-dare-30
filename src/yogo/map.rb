@@ -1,15 +1,19 @@
 require 'yogo/tile'
+require 'yogo/entity/country'
 
 module YOGO
   class Map
 
     attr_reader :maxx, :maxy
+    attr_accessor :entities
 
     def initialize(width, height)
       @maxx = width - 1
       @maxy = height - 1
 
       @cells = Hash.new { |hash, pos| hash[pos] = Tile.new(pos) }
+
+      @entities = []
 
       random!
     end
@@ -33,6 +37,9 @@ module YOGO
     end
 
     def update(world)
+      @entities.each do |entity|
+        entity.update(world)
+      end
       @cells.each do |pos, cell|
         cell.update(world)
       end
@@ -101,8 +108,11 @@ module YOGO
           pos = self[[ Kernel::rand(@maxx), Kernel::rand(@maxy) ]]
         end
 
+        country = Entity::Country.new
+        @entities << country
+
         city = Structure.create(:city, pos)
-        # city.owner = country
+        city.owner = country
         city.population = 1.0 + Kernel::rand(5.0)
         city.name = "City #{idx}"
         pos[:structure] = city
