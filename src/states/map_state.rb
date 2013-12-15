@@ -56,13 +56,11 @@ module YOGO
 
     def render(container, game, graphics)
       if @world.generating? then
-        @minimap_mode = :countries
         draw_sidebar(graphics)
         graphics.set_color(@font_color)
         graphics.draw_string("Map generating... #{@world.map.unmapped}", container.width / 2, container.height / 2)
         reset_minimap
       else
-        @minimap_mode = nil
         draw_map(graphics)
         draw_sidebar(graphics)
       end
@@ -106,6 +104,16 @@ module YOGO
         reset_viewport
         reset_minimap
         return
+      end
+
+      if keycode == Input::KEY_F1 then
+        @minimap_mode = nil
+        reset_minimap
+      end
+
+      if keycode == Input::KEY_F2 then
+        @minimap_mode = :countries
+        reset_minimap
       end
 
       if @current_selected then
