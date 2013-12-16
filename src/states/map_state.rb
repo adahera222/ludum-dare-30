@@ -58,6 +58,7 @@ module YOGO
       @line_height = @default_font.getHeight('Thequickbrownfox')
 
       @stock_overlay = false
+      @opponents_overlay = false
       @overlay_background = Color.new(0.0,0.0,0.0,0.8)
     end
 
@@ -74,6 +75,9 @@ module YOGO
 
         if @stock_overlay then
           draw_stock_overlay(graphics)
+        end
+        if @opponents_overlay then
+          draw_opponents_overlay(graphics)
         end
       end
 
@@ -127,6 +131,10 @@ module YOGO
         end
 
         if keycode == Input::KEY_F2 then
+          @opponents_overlay = !@opponents_overlay
+        end
+
+        if keycode == Input::KEY_F3 then
           if @minimap_mode.nil? then
             @minimap_mode = :countries
           else
@@ -551,5 +559,26 @@ module YOGO
       end
     end
 
+    def draw_opponents_overlay(graphics)
+      graphics.set_color(@overlay_background)
+      vx = @screen_x - SIDEBAR_WIDTH - OVERLAY_WIDTH - 50
+      vy = @screen_y / 2
+      graphics.fill_rect(vx, vy,OVERLAY_WIDTH,(@screen_y / 2) - 50)
+
+      vx += 4
+      vy += 4
+
+      graphics.set_color(@font_color)
+      @world.map.entities.each do |entity|
+        next unless entity.is_a?(Entity::Corporation)
+
+        if entity.running? then
+          graphics.draw_string("#{entity.name} #{sprintf('$%.1fm', entity.balance)}", vx, vy)
+        else
+          graphics.draw_string("#{entity.name} BANKRUPT", vx, vy)
+        end
+        vy += 20
+      end
+    end
   end
 end
