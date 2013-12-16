@@ -42,7 +42,7 @@ configuration do |c|
 	# Whether Ruby source files should be compiled into .class files. Setting this to true currently breaks packaging
 	# default value: false
 	#
-	c.compile_ruby_files = true
+	c.compile_ruby_files = false
 
 	# A list of individual Java library files to include.
 	# default value: []
@@ -60,6 +60,13 @@ configuration do |c|
   files = []
   files += ["OpenAL32.dll", "OpenAL64.dll", "jinput-dx8.dll", "jinput-dx8_64.dll", "jinput-raw.dll", "jinput-raw_64.dll", "lwjgl.dll", "lwjgl64.dll"]
   files += ["openal.dylib", 'liblwjgl.jnilib', 'libjinput-osx.jnilib']
+
+  Dir['data/**/*'].each do |file|
+    next if file =~ /\.(bak|pyxel|tps)$|exported\/\.png$/i
+    next if File.directory?(file)
+    files << file
+  end
+
 	c.files_to_copy = files
 
 	# Undocumented option 'source_jvm_version'
@@ -75,7 +82,7 @@ configuration do |c|
 	# Undocumented option 'jvm_arguments'
 	# default value: ""
 	#
-	#c.jvm_arguments = ""
+	c.jvm_arguments = "-Xmx512M"
 
 	# Undocumented option 'java_library_path'
 	# default value: ""

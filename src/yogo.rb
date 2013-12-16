@@ -2,8 +2,8 @@ $:.push File.expand_path('../../lib', __FILE__)
 $:.push File.expand_path('../', __FILE__)
 
 require 'java'
-require 'lwjgl.jar'
-require 'slick.jar'
+require 'lib/lwjgl.jar'
+require 'lib/slick.jar'
 
 java_import org.newdawn.slick.state.StateBasedGame
 java_import org.newdawn.slick.GameContainer
