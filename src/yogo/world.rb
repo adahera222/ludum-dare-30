@@ -12,7 +12,7 @@ module YOGO
     attr_reader :map, :market
 
     def initialize
-      @map = Map.new(50,50)
+      @map = Map.new(40,40)
       @market = Market.new
 
       @player = Entity::Player.new

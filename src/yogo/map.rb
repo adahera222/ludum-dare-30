@@ -138,11 +138,19 @@ module YOGO
 
     def generate_countries_and_capitals
       idx = 1
+      min_dist = 2 * ((width/8.0) ** 2)
       @capitals = []
       (width/4).times do
-        pos = self[[ Kernel::rand(@maxx), Kernel::rand(@maxy) ]]
-        while pos.terrain == :water || !pos.resource.nil? || !pos.structure.nil? do
+        pos = nil
+        dist = 0.0
+
+        while pos.nil? || pos.terrain == :water || !pos.resource.nil? || !pos.structure.nil? || dist < min_dist do
           pos = self[[ Kernel::rand(@maxx), Kernel::rand(@maxy) ]]
+          if @capitals.length > 0 then
+            dist = @capitals.collect { |other| ((other.tile.x - pos.x) ** 2) + ((other.tile.y - pos.y) ** 2) }.min
+          else
+            dist = 9999.00
+          end
         end
 
         country = Entity::Country.new
