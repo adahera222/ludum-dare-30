@@ -161,6 +161,9 @@ module YOGO
           @data[:air_pollution] -= 0.001
           @data[:water_pollution] += 0.001
         end
+        if @data[:water_pollution] >= 0.001
+          @data[:water_pollution] -= 0.001
+        end
       else
         if inundation > 0.5 then
           @data[:terrain] = :water
