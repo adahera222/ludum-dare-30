@@ -12,7 +12,7 @@ module YOGO
     TILE_SIZE = 32
     SCROLL_SPEED = 0.25
     SIDEBAR_WIDTH = 280
-    MINIMAP_WIDTH = SIDEBAR_WIDTH - 4
+    MINIMAP_WIDTH = SIDEBAR_WIDTH
 
     KEYS = {
       'm' => [ :mine, :well ],
@@ -292,8 +292,8 @@ module YOGO
       graphics.set_color(@font_color)
       graphics.draw_string(sprintf('$%.2fm', @world.player.balance), sidebar_x + 2 + 4 + TILE_SIZE, 10)
 
-      minimap_x = sidebar_x + 2
-      minimap_y = 2 + TILE_SIZE + 5
+      minimap_x = sidebar_x
+      minimap_y = TILE_SIZE + 5
 
       w = (MINIMAP_WIDTH / @map.width).floor
       h = (MINIMAP_WIDTH / @map.height).floor
@@ -301,7 +301,7 @@ module YOGO
       if @minimap_buffer then
         @minimap_buffer.draw(minimap_x, minimap_y)
       else
-        mx = sidebar_x + 2
+        mx = sidebar_x
         my = minimap_y
 
         graphics.set_color(@minimap_background)
