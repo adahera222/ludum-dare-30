@@ -9,7 +9,7 @@ module YOGO
       end
 
       def self.description
-        "5 coal -> 10 power"
+        "2 coal -> 10 power"
       end
 
       def self.valid_tile?(tile)
@@ -17,11 +17,11 @@ module YOGO
       end
 
       def self.setup_cost
-        13
+        17
       end
 
       def self.running_cost
-        2.0
+        1.0
       end
 
       def self.produces
@@ -33,7 +33,7 @@ module YOGO
       end
 
       def consumes
-        { :coal => 5 }
+        { :coal => 2 }
       end
 
       def causes

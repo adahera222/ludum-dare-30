@@ -17,11 +17,11 @@ module YOGO
       end
 
       def self.setup_cost
-        25
+        33
       end
 
       def self.running_cost
-        5
+        7
       end
 
       def production

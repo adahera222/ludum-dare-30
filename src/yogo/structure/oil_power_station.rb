@@ -10,11 +10,11 @@ module YOGO
       end
 
       def self.description
-        "5 oil -> 10 power"
+        "2 oil -> 10 power"
       end
 
       def consumes
-        { :oil => 5 }
+        { :oil => 2 }
       end
 
       def causes

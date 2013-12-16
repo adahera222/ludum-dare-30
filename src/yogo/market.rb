@@ -1,10 +1,20 @@
 module YOGO
   class Market
 
+    STOCK_SEED_PRICES = {
+      :iron => 4,
+      :coal => 4,
+      :oil => 6,
+      :food => 0.8,
+      :steel => 10,
+      :power => 0.8
+    }
+
+
     attr_reader :demand, :stocks
 
     def initialize
-      @stocks = Hash.new { |hash, commodity| hash[commodity] = { :available => 0, :price => 0.0 } }
+      @stocks = Hash.new { |hash, commodity| hash[commodity] = { :available => 0, :price => STOCK_SEED_PRICES[commodity].to_f } }
       reset_demand
     end
 

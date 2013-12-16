@@ -25,7 +25,7 @@ module YOGO
       end
 
       def production
-        { :oil => 5 }
+        { :oil => 1 }
       end
 
       def causes

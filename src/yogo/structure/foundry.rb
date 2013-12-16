@@ -17,7 +17,7 @@ module YOGO
       end
 
       def self.setup_cost
-        25
+        26
       end
 
       def self.running_cost
