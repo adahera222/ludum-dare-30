@@ -40,19 +40,19 @@ module YOGO
                       }
 
     POLLUTION_DESCRIPTIONS = {
-      :water_pollution => { 0.05 => 'Pristine water',
-                            0.15 => 'Minor water pollution',
-                            0.20 => 'Some water pollution',
-                            0.50 => 'Heavy water pollution',
-                            0.75 => 'Toxic sludge',
-                            2.00 => 'Raw toxic waste'
+      :water_pollution => { 0.05 => 'Pristine',
+                            0.15 => 'Minor',
+                            0.20 => 'Some',
+                            0.50 => 'Heavy',
+                            0.75 => 'Toxic',
+                            2.00 => 'Raw Waste'
                           },
-      :air_pollution =>   { 0.05 => 'Pristine air',
-                            0.15 => 'Minor dust particles',
-                            0.20 => 'Some air pollution',
-                            0.50 => 'Heavy air pollution',
-                            0.75 => 'Noxious fumes',
-                            2.00 => 'Toxic fumes'
+      :air_pollution =>   { 0.05 => 'Pristine',
+                            0.15 => 'Dusty',
+                            0.20 => 'Haze',
+                            0.50 => 'Smog',
+                            0.75 => 'Noxious',
+                            2.00 => 'Toxic'
                           }
     }
 
@@ -200,7 +200,7 @@ module YOGO
 
     def pollution_description(type, value)
       POLLUTION_DESCRIPTIONS[type].each do |limit, name|
-        return "#{name} #{sprintf('%.2f', value)}" if value <= limit
+        return "#{name} #{sprintf('%d%%', value * 100.0)}" if value <= limit
       end
     end
 

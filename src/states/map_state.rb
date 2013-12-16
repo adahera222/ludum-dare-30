@@ -478,12 +478,26 @@ module YOGO
         graphics.draw_string(@current_selected.resource_name, text_x, data_y + @line_height)
       end
 
-      graphics.draw_string(@current_selected.air_pollution_description, text_x, data_y + TILE_SIZE + 5)
-      graphics.draw_string(@current_selected.water_pollution_description, text_x, data_y + TILE_SIZE + 5 + @line_height)
+      tx = data_x + 2
+      ty = data_y + TILE_SIZE + 5
 
+      sprite = @tileset.ui16(:clean_air)
+      sprite.draw(tx, ty)
+      sprite = @tileset.ui16(:dirty_air)
+      sprite.draw(tx, ty, Color.new(1.0,1.0,1.0, @current_selected.air_pollution))
+      graphics.draw_string(@current_selected.air_pollution_description, tx + 18, ty)
+
+      tw = @default_font.get_width(@current_selected.water_pollution_description)
+      tx = @screen_x - tw - 5
+      graphics.draw_string(@current_selected.water_pollution_description, tx, ty)
+
+      sprite = @tileset.ui16(:clean_water)
+      sprite.draw(tx - 18, ty)
+      sprite = @tileset.ui16(:dirty_water)
+      sprite.draw(tx - 18, ty, Color.new(1.0,1.0,1.0, @current_selected.water_pollution))
 
       buttons_x = data_x
-      buttons_y = data_y + (2 * (TILE_SIZE + 5))
+      buttons_y = data_y + (TILE_SIZE + 5 + 20)
 
       tile_buffer = Image.new(TILE_SIZE, TILE_SIZE)
       graphics.copy_area(tile_buffer, data_x, data_y)
