@@ -146,7 +146,7 @@ module YOGO
               state.lobby(:water_pollution, -1.0, @player)
               @player.balance -= 1.0
               @ui_handler.immediate("You invest $1m lobbying for lower water pollution regulation")
-            when '='
+            when ']'
               # Lobby raise water tax
               state.lobby(:water_pollution, 1.0, @player)
               @player.balance -= 1.0
@@ -170,10 +170,10 @@ module YOGO
             if building then
               price = Structure.price(building)
               if price > @player.balance then
-                @ui_handler.immediate("A #{Structure.name(building)} costs $#{price}m but you only have #{sprintf('$%.2fm', @player.balance)}")
+                @ui_handler.critical("A #{Structure.name(building)} costs $#{price}m but you only have #{sprintf('$%.2fm', @player.balance)}")
               else
                 @player.balance -= price
-                @map.build_structure(building, @current_selected, @world.player)
+                s = @map.build_structure(building, @current_selected, @world.player)
                 reset_minimap
                 @ui_handler.immediate("You have built a new #{s.name} in #{@current_selected.state.name}")
               end
