@@ -43,15 +43,13 @@ module YOGO
       end
 
       # TODO: Extract to a Concern along with CoalPowerStation
-      def update(world)
+      def do_production(world)
         cs = self.consumes
         cs.each do |commodity, quantity|
           item = owner.consume(commodity, quantity, world)
-          @production = (item[:fulfilled].to_f / quantity.to_f).floor.to_i
+          @production *= (item[:fulfilled].to_f / quantity.to_f).floor.to_i
           @running_cost += item[:price]
         end
-
-        super
       end
 
     end

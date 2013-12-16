@@ -95,19 +95,15 @@ module YOGO
       end
 
       def notice(message)
-        # TODO: Show a history item
-        puts message
         @text << message
       end
 
       def immediate(message)
-        puts message
         @list.unshift([ message, TEXT_SHOW_TIME ])
       end
 
       def location_alert(message, tile)
         # TODO: Show a history item that takes you to this spot
-        puts message
         @text << message
       end
 

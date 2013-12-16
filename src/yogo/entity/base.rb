@@ -1,7 +1,7 @@
 module YOGO
   module Entity
-    class Base
 
+    class Base
       attr_accessor :balance
       attr_accessor :color
       attr_reader :structures
@@ -11,6 +11,11 @@ module YOGO
         @stockpile = Hash.new { |hash, commodity| hash[commodity] = { :stock => 0, :cost => 0 } }
         @structures = []
       end
+
+      def to_s
+        "#<#{self.class.name} #{name.inspect} #{sprintf('$%.2f', @balance)}>"
+      end
+      alias :inspect :to_s
 
       def update(world)
         # NOOP

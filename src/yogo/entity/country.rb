@@ -61,9 +61,9 @@ module YOGO
 
       def update(world)
         consider_regulations(world)
-        puts "STATS: #{@statistics.inspect}"
-        puts "LOBBY: #{@lobby.inspect}"
-        puts "TAX: #{@taxes.inspect}"
+        # puts "STATS: #{@statistics.inspect}"
+        # puts "LOBBY: #{@lobby.inspect}"
+        # puts "TAX: #{@taxes.inspect}"
         reset_statistics
       end
 

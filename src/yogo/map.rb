@@ -87,6 +87,10 @@ module YOGO
       @tiles.each do |pos, cell|
         cell.update(world)
       end
+
+      @entities.each do |e|
+        puts e.to_s if e.is_a?(Entity::Corporation)
+      end
     end
 
     def rand
@@ -252,7 +256,7 @@ module YOGO
         struct = case commodity
         when :food
           if Kernel::rand > 0.5 then
-            find_and_build(:farm, entity)
+            find_and_build(:farm, entity, :arable)
           else
             find_and_build(:fishing_fleet, entity)
           end
@@ -265,7 +269,7 @@ module YOGO
             find_and_build(:oil_power_station, entity)
           end
         when :oil
-          find_and_build(:well, entity)
+          find_and_build(:well, entity, :oil)
         when :coal
           find_and_build(:mine, entity, :coal)
         when :iron
@@ -275,6 +279,7 @@ module YOGO
         else
           puts "CAN'T SATISFY: #{commodity}"
         end
+        entity.world_gen_structure(struct)
 
         puts "Built: #{struct}"
       end
@@ -282,7 +287,7 @@ module YOGO
 
     def find_and_build(structure, owner, resource=nil)
       pos = nil
-      while(pos.nil? || (resource && pos.resource != resource) || !pos.valid_structures.include?(structure)) do
+      while(pos.nil? || (pos.resource != resource) || !pos.valid_structures.include?(structure)) do
         pos = self.rand
       end
 

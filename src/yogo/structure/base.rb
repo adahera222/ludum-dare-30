@@ -62,6 +62,7 @@ module YOGO
       end
 
       def update(world)
+        @production = 1.0
         @notes = []
         @icons = []
 
@@ -71,17 +72,18 @@ module YOGO
           @running_cost = 0.0
         end
 
+        @owner.balance -= @running_cost
+
+        do_production(world) if self.respond_to?(:do_production)
+
         causes.each do |detail, effect|
           @tile[detail] += effect
           @running_cost += @tile.state.cost_impact(detail, effect, self)
         end
 
-        @owner.balance -= @running_cost
-
         production.each do |commodity, quantity|
           @owner.store(commodity, quantity, @running_cost / quantity) unless quantity <= 0
         end
-
       end
 
     end

@@ -17,7 +17,6 @@ module YOGO
           world.market.offer(commodity, stock, price, self)
           @stockpile[commodity][:stock] = 0
         end
-        puts "BALANCE: #{@balance}"
 
         if @balance < -15.0 then
           # You are bankrupt. Game over!

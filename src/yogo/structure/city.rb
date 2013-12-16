@@ -28,8 +28,8 @@ module YOGO
 
       def consumes
         { :food => @population.ceil,
-          :power => (@population * 2.0).ceil,
-          :steel => @population.ceil
+          :power => (@population * 1.5).ceil,
+          :steel => (@population * 0.5).ceil
         }
       end
 
