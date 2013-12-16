@@ -2,6 +2,9 @@ java_import org.newdawn.slick.state.BasicGameState
 java_import org.newdawn.slick.Color
 java_import org.newdawn.slick.fills.GradientFill
 java_import org.newdawn.slick.geom.Rectangle
+java_import org.newdawn.slick.TrueTypeFont
+java_import org.newdawn.slick.util.ResourceLoader
+java_import java.awt.Font
 
 module YOGO
   class MapState < BasicGameState
@@ -52,9 +55,18 @@ module YOGO
       @minimap_background = Color.new(0.1, 0.1, 0.1, 1.0)
       @minimap_rect = Color.new(1.0,1.0,1.0,0.8)
       @font_color = Color.new(1.0,1.0,1.0,1.0)
+
+
+      input = ResourceLoader.getResourceAsStream("data/fonts/Arimo-Regular.ttf");
+      font = Font.createFont(Font::TRUETYPE_FONT, input)
+      font = font.deriveFont(14.0)
+      @font = TrueTypeFont.new(font, false)
+
+      @line_height = @font.getHeight('Thequickbrownfox')
     end
 
     def render(container, game, graphics)
+      graphics.set_font(@font)
       if @world.generating? then
         draw_sidebar(graphics)
         graphics.set_color(@font_color)
@@ -410,11 +422,11 @@ module YOGO
       graphics.draw_string(@current_selected.terrain_name, text_x, data_y)
 
       if @current_selected[:resource] then
-        graphics.draw_string(@current_selected.resource_name, text_x, data_y + 16)
+        graphics.draw_string(@current_selected.resource_name, text_x, data_y + @line_height)
       end
 
       graphics.draw_string(@current_selected.air_pollution_description, text_x, data_y + TILE_SIZE + 5)
-      graphics.draw_string(@current_selected.water_pollution_description, text_x, data_y + TILE_SIZE + 5 + 16)
+      graphics.draw_string(@current_selected.water_pollution_description, text_x, data_y + TILE_SIZE + 5 + @line_height)
 
 
       buttons_x = data_x
@@ -427,14 +439,14 @@ module YOGO
         # Draw out the structures we can construct here
         @current_selected.valid_structures.each_with_index do |type, idx|
           vx = buttons_x
-          vy = buttons_y + (idx * (TILE_SIZE + 5 + 20))
+          vy = buttons_y + (idx * (TILE_SIZE + 5 + @line_height))
 
           key = KEYS.find { |k, s| s.include?(type) }
 
           tile_buffer.draw(vx, vy)
           @tileset.structure(type).draw(vx, vy)
           graphics.draw_string("(#{key[0]}) #{Structure.name(type)}", vx + 5 + TILE_SIZE, vy)
-          graphics.draw_string(sprintf("$%dm + $%.1fm/turn", Structure.price(type), Structure.running_cost(type)), vx + 5 + TILE_SIZE, vy + 16)
+          graphics.draw_string(sprintf("$%dm + $%.1fm/turn", Structure.price(type), Structure.running_cost(type)), vx + 5 + TILE_SIZE, vy + @line_height)
           graphics.draw_string(Structure.description(type), vx + 5 + TILE_SIZE, vy + 32)
         end
       else
