@@ -78,6 +78,11 @@ module YOGO
       elsif @population <= 10.00 then
         @ui_handler.critical("The global population has been decimated to under 10 million people")
       end
+
+      opponents = @map.entities.find_all { |x| x.is_a?(Entity::Corporation) && x.running? }
+      if opponents.count <= 0 then
+        @ui_handler.winner!("All your competitors are out of business. You are a global monopoly!")
+      end
     end
 
     def warming_rate

@@ -18,6 +18,10 @@ module YOGO
       end
       alias :inspect :to_s
 
+      def running?
+        @running
+      end
+
       def update(world)
         # NOOP
       end

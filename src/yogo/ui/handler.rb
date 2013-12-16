@@ -116,6 +116,11 @@ module YOGO
         @game.running = false
       end
 
+      def winner!(message)
+        critical(message)
+        @game.running = false
+      end
+
     private
 
       def expire_message_list(array, delta)
