@@ -115,12 +115,14 @@ module YOGO
         end
 
         if keycode == Input::KEY_F1 then
-          @minimap_mode = nil
-          reset_minimap
         end
 
         if keycode == Input::KEY_F2 then
-          @minimap_mode = :countries
+          if @minimap_mode.nil? then
+            @minimap_mode = :countries
+          else
+            @minimap_mode = nil
+          end
           reset_minimap
         end
 
