@@ -84,7 +84,7 @@ module YOGO
       if @air_pollution.nil? then
         0.0
       else
-        -0.5 + (@air_pollution / ((@map.width * @map.height) / 1500.0))
+        -0.5 + (@air_pollution / ((@map.width * @map.height) / 500.0))
       end
     end
   end
