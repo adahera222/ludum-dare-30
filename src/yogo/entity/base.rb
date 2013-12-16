@@ -21,6 +21,11 @@ module YOGO
         @structures = @structures.compact.uniq
       end
 
+      def remove_structure(structure)
+        @structures -= [ structure ]
+        @structures = @structures.compact.uniq
+      end
+
       def store(commodity, quantity, unit_cost)
         cost_of_stockpile = @stockpile[commodity][:cost] * @stockpile[commodity][:stock]
         @stockpile[commodity][:stock] += quantity

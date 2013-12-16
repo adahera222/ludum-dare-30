@@ -90,6 +90,7 @@ module YOGO
       def turn!
         @text = []
         @list = []
+        @critical.each { |data| data[1] = [ data[1], 1500.0 ].min }
         immediate("A new turn begins...")
       end
 
@@ -112,6 +113,11 @@ module YOGO
 
       def critical(message)
         @critical << [ message, TEXT_SHOW_TIME * 2 ]
+      end
+
+      def game_over!(message)
+        critical(message)
+        @game.running = false
       end
 
     private

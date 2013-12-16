@@ -65,6 +65,17 @@ module YOGO
           @icons << :no_steel
         end
 
+        if tile.air_pollution > 0.75 then
+          growth_rate -= 0.05
+          world.ui_handler.location_alert("#{self.name} citizens are dying due to toxic air pollution", @tile)
+        elsif tile.air_pollution > 0.5 then
+          growth_rate -= 0.02
+          world.ui_handler.location_alert("#{self.name} citizens are having major health issues due to air pollution", @tile)
+        elsif tile.air_pollution > 0.25 then
+          growth_rate -= 0.01
+          world.ui_handler.location_alert("#{self.name} citizens are having health issues due to air pollution", @tile)
+        end
+
         @population *= growth_rate
 
         @tile.state.risk_assessment(:inundation, @tile.inundation, self)

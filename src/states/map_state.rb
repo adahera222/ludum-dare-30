@@ -106,84 +106,82 @@ module YOGO
     end
 
     def keyPressed(keycode, char)
-      if char == 13 then
-        @world.turn!
-        reset_viewport
-        reset_minimap
-        return
-      end
+      if @game.running then
+        if char == 13 then
+          @world.turn!
+          reset_viewport
+          reset_minimap
+          return
+        end
 
-      if keycode == Input::KEY_F1 then
-        @minimap_mode = nil
-        reset_minimap
-      end
+        if keycode == Input::KEY_F1 then
+          @minimap_mode = nil
+          reset_minimap
+        end
 
-      if keycode == Input::KEY_F2 then
-        @minimap_mode = :countries
-        reset_minimap
-      end
+        if keycode == Input::KEY_F2 then
+          @minimap_mode = :countries
+          reset_minimap
+        end
 
-      if keycode == Input::KEY_F9 then
-        @ui_handler.critical('YOWZERS!')
-      end
+        if @current_selected then
+          return if %w( w a s d ).include?(char.chr)
 
-      if @current_selected then
-        return if %w( w a s d ).include?(char.chr)
+          if @current_selected.structure && @current_selected.structure.is_a?(Structure::City) then
+            city = @current_selected.structure
+            state = city.owner
+            case char.chr
+            when '-'
+              # Lobby lower air tax
+              state.lobby(:air_pollution, -1.0, @player)
+              @player.balance -= 1.0
+              @ui_handler.immediate("You invest $1m lobbying for lower air pollution regulation")
+            when '='
+              # Lobby raise air tax
+              state.lobby(:air_pollution, 1.0, @player)
+              @player.balance -= 1.0
+              @ui_handler.immediate("You invest $1m lobbying for greater air pollution regulation")
+            when '['
+              # Lobby lower water tax
+              state.lobby(:water_pollution, -1.0, @player)
+              @player.balance -= 1.0
+              @ui_handler.immediate("You invest $1m lobbying for lower water pollution regulation")
+            when '='
+              # Lobby raise water tax
+              state.lobby(:water_pollution, 1.0, @player)
+              @player.balance -= 1.0
+              @ui_handler.immediate("You invest $1m lobbying for greater water pollution regulation")
+            end
 
-        if @current_selected.structure && @current_selected.structure.is_a?(Structure::City) then
-          city = @current_selected.structure
-          state = city.owner
-          case char.chr
-          when '-'
-            # Lobby lower air tax
-            state.lobby(:air_pollution, -1.0, @player)
-            @player.balance -= 1.0
-            @ui_handler.immediate("You invest $1m lobbying for lower air pollution regulation")
-          when '='
-            # Lobby raise air tax
-            state.lobby(:air_pollution, 1.0, @player)
-            @player.balance -= 1.0
-            @ui_handler.immediate("You invest $1m lobbying for greater air pollution regulation")
-          when '['
-            # Lobby lower water tax
-            state.lobby(:water_pollution, -1.0, @player)
-            @player.balance -= 1.0
-            @ui_handler.immediate("You invest $1m lobbying for lower water pollution regulation")
-          when '='
-            # Lobby raise water tax
-            state.lobby(:water_pollution, 1.0, @player)
-            @player.balance -= 1.0
-            @ui_handler.immediate("You invest $1m lobbying for greater water pollution regulation")
-          end
-
-        elsif @current_selected.structure.nil? then
-          building = nil
-          KEYS.each do |key, structures|
-            if char == key.ord then
-              avail = @current_selected.valid_structures
-              structures.each do |type|
-                if avail.include?(type) then
-                  puts "BUILDING: #{type}"
-                  building = type
-                  break
+          elsif @current_selected.structure.nil? then
+            building = nil
+            KEYS.each do |key, structures|
+              if char == key.ord then
+                avail = @current_selected.valid_structures
+                structures.each do |type|
+                  if avail.include?(type) then
+                    puts "BUILDING: #{type}"
+                    building = type
+                    break
+                  end
                 end
               end
             end
-          end
-          if building then
-            price = Structure.price(building)
-            if price > @player.balance then
-              @ui_handler.immediate("A #{Structure.name(building)} costs $#{price}m but you only have #{sprintf('$%.2fm', @player.balance)}")
+            if building then
+              price = Structure.price(building)
+              if price > @player.balance then
+                @ui_handler.immediate("A #{Structure.name(building)} costs $#{price}m but you only have #{sprintf('$%.2fm', @player.balance)}")
+              else
+                @player.balance -= price
+                s = Structure.create(building, @current_selected)
+                s.owner = @world.player
+                @current_selected[:structure] = s
+                reset_minimap
+                @ui_handler.immediate("You have built a new #{s.name} in #{@current_selected.state.name}")
+              end
             else
-              @player.balance -= price
-              s = Structure.create(building, @current_selected)
-              s.owner = @world.player
-              @current_selected[:structure] = s
-              reset_minimap
-              @ui_handler.immediate("You have built a new #{s.name} in #{@current_selected.state.name}")
+              puts "UNKNOWN: #{char}"
             end
-          else
-            puts "UNKNOWN: #{char}"
           end
         end
       end

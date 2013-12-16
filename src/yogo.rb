@@ -21,13 +21,17 @@ module YOGO
   class Game < StateBasedGame
 
     attr_reader :world, :ui_handler
+    attr_accessor :running
 
     def initialize(name)
+      @running = false
+
       @ui_handler = UI::Handler.new
       @ui_handler.game = self
 
       @world = World.new
       @world.ui_handler = @ui_handler
+      @world.game = self
 
       super
     end
