@@ -157,6 +157,10 @@ module YOGO
       if terrain == :water then
         @data[:inundation] += 0.01 * world.warming_rate
         @data[:inundation] = 0.0 if @data[:inundation] < 0.0
+        if @data[:air_pollution] >= 0.001
+          @data[:air_pollution] -= 0.001
+          @data[:water_pollution] += 0.001
+        end
       else
         if inundation > 0.5 then
           @data[:terrain] = :water
