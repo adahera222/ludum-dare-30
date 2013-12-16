@@ -113,6 +113,11 @@ module YOGO
       build_structure(structure, pos, owner)
     end
 
+    def destroy_structure(structure)
+      structure.owner.structures -= [ structure ]
+      structure.tile[:structure] = nil
+    end
+
   private
 
     def random!

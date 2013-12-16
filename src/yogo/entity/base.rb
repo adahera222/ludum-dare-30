@@ -4,7 +4,7 @@ module YOGO
     class Base
       attr_accessor :balance
       attr_accessor :color
-      attr_reader :structures
+      attr_accessor :structures
       attr_accessor :name
 
       def initialize

@@ -152,6 +152,21 @@ module YOGO
               @player.balance -= 1.0
               @ui_handler.immediate("You invest $1m lobbying for greater water pollution regulation")
             end
+          elsif @current_selected.structure && @current_selected.structure.owner == @player then
+            case char.chr
+            when 'x'
+              if @current_selected.structure.running? then
+                @current_selected.structure.shutdown!
+                @ui_handler.immediate("You have shut down a #{@current_selected.structure.name} temporarily")
+              else
+                @current_selected.structure.reopen!
+                @ui_handler.immediate("You have re-opened a #{@current_selected.structure.name}")
+              end
+            when 'z'
+              # Destroy it entirely
+              @ui_handler.location_alert("You have fully decommissioned a #{@current_selected.structure.name}", @current_selected)
+              @map.destroy_structure(@current_selected.structure)
+            end
 
           elsif @current_selected.structure.nil? then
             building = nil
@@ -489,6 +504,15 @@ module YOGO
               vy += 15
             end
           end
+        elsif structure.owner == @player then
+          if structure.running? then
+            graphics.draw_string('(x) Temporary Closure', vx, vy)
+          else
+            graphics.draw_string('(x) Re-open', vx, vy)
+          end
+          vy += 15
+          graphics.draw_string('(z) Decommission', vx, vy)
+          vy += 15
         end
 
       end

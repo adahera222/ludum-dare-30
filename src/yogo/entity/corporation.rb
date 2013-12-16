@@ -112,8 +112,7 @@ module YOGO
 
           if @decommission_triggers[structure] <= -1.5 then
             # This is beyond a joke - destroy it entirely
-            structure.tile[:structure] = nil
-            @structures -= [ structure ]
+            world.map.destroy_structure(structure)
             world.ui_handler.location_alert("#{self.name} has fully decommissioned a #{structure.name}", structure.tile)
             @purchase_triggers[structure.type] = -100.0
           end
