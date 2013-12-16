@@ -17,6 +17,14 @@ module YOGO
         "City"
       end
 
+      def income
+        nil
+      end
+
+      def profitability
+        nil
+      end
+
       def name
         # "#{@name} [#{citizens}]"
         "#{@name} [#{sprintf('%.2f', @population)}]"

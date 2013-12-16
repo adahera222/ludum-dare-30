@@ -31,6 +31,10 @@ module YOGO
       result
     end
 
+    def price(commodity)
+      @stocks[commodity][:price]
+    end
+
     def purchase!(commodity, quantity, owner)
       purchase(commodity, quantity, owner) == quantity
     end

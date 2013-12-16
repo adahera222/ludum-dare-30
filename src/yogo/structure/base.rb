@@ -27,6 +27,8 @@ module YOGO
       attr_reader :type, :tile, :notes, :icons
       attr_reader :owner
 
+      attr_reader :income, :profitability
+
       def initialize(type, tile)
         @type = type
         @tile = tile
@@ -65,6 +67,7 @@ module YOGO
         @production = 1.0
         @notes = []
         @icons = []
+        @income = 0.0
 
         if self.class.respond_to?(:running_cost) then
           @running_cost = self.class.running_cost.to_f
@@ -83,7 +86,10 @@ module YOGO
 
         production.each do |commodity, quantity|
           @owner.store(commodity, quantity, @running_cost / quantity) unless quantity <= 0
+          @income += quantity * world.market.price(commodity)
         end
+
+        @profitability = @income / @running_cost
       end
 
     end

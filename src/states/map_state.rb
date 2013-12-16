@@ -449,8 +449,17 @@ module YOGO
         vx = buttons_x
         vy = buttons_y
 
+        if structure.profitability then
+          graphics.draw_string("Profitability: #{sprintf('%.2f%%', (structure.profitability - 1.0) * 100.0)}", vx, vy)
+          vy += 15
+        end
+
         structure.production.each do |item, quantity|
           graphics.draw_string("Produces #{quantity} #{item}", vx, vy)
+          vy += 15
+        end
+        structure.consumes.each do |item, quantity|
+          graphics.draw_string("Consumes #{quantity} #{item}", vx, vy)
           vy += 15
         end
         structure.causes.each do |effect, quantity|
