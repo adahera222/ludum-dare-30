@@ -173,9 +173,7 @@ module YOGO
                 @ui_handler.immediate("A #{Structure.name(building)} costs $#{price}m but you only have #{sprintf('$%.2fm', @player.balance)}")
               else
                 @player.balance -= price
-                s = Structure.create(building, @current_selected)
-                s.owner = @world.player
-                @current_selected[:structure] = s
+                @map.build_structure(building, @current_selected, @world.player)
                 reset_minimap
                 @ui_handler.immediate("You have built a new #{s.name} in #{@current_selected.state.name}")
               end

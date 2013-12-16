@@ -26,6 +26,13 @@ module YOGO
         {}
       end
 
+      def consumes
+        { :food => @population.ceil,
+          :power => (@population * 2.0).ceil,
+          :steel => @population.ceil
+        }
+      end
+
       def citizens
         @population.floor
       end
@@ -41,8 +48,10 @@ module YOGO
 
         growth_rate = 1.0
 
+        cs = consumes
+
         # Growth rates at ~3-6% per year
-        if @owner.consume!(:food, @population.ceil, world)
+        if @owner.consume!(:food, cs[:food], world)
           growth_rate += 0.03
         else
           world.ui_handler.location_alert("#{self.name} are starving!", @tile)
@@ -50,14 +59,14 @@ module YOGO
           @icons << :starvation
         end
 
-        unless @owner.consume!(:power, (@population * 2.0).ceil, world)
+        unless @owner.consume!(:power, cs[:power], world)
           growth_rate -= 0.03
           world.ui_handler.location_alert("#{self.name} has now power!", @tile)
           @notes << 'No Power'
           @icons << :no_power
         end
 
-        if @owner.consume!(:steel, @population.ceil, world)
+        if @owner.consume!(:steel, cs[:steel], world)
           growth_rate += 0.015
         else
           world.ui_handler.location_alert("#{self.name} can't grow due to a lack of steel", @tile)

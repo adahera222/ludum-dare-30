@@ -24,6 +24,10 @@ module YOGO
         1
       end
 
+      def self.produces
+        { :food => 3 }
+      end
+
       def production
         { :food => 3 }
       end

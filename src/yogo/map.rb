@@ -1,5 +1,6 @@
 require 'yogo/tile'
 require 'yogo/entity/country'
+require 'yogo/entity/corporation'
 
 module YOGO
   class Map
@@ -50,23 +51,32 @@ module YOGO
       (x >= 0 && x <= @maxx) && (y >= 0 && y <= @maxy)
     end
 
+    def opponents_generated?
+      @opponents_generated
+    end
+
     def world_gen_update(world)
-      @capitals.each do |capital|
-        capital.tile[:claims] ||= {}
-        capital.tile[:claims][capital.owner] ||= 0.0
-        capital.tile[:claims][capital.owner] += 4000.0
-      end
-      0.upto(@maxx) do |x|
-        0.upto(@maxy) do |y|
-          pos = [x,y]
-          tile = self[pos]
-          tile[:state] = @capitals.sort_by { |capital|
-            dx = capital.tile.x - x
-            dy = capital.tile.y - y
-            (dx ** 2) + (dy ** 2)
-          }.first.owner
-          @unmapped -= 1
+      if @unmapped > 0 then
+        @capitals.each do |capital|
+          capital.tile[:claims] ||= {}
+          capital.tile[:claims][capital.owner] ||= 0.0
+          capital.tile[:claims][capital.owner] += 4000.0
         end
+        0.upto(@maxx) do |x|
+          0.upto(@maxy) do |y|
+            pos = [x,y]
+            tile = self[pos]
+            tile[:state] = @capitals.sort_by { |capital|
+              dx = capital.tile.x - x
+              dy = capital.tile.y - y
+              (dx ** 2) + (dy ** 2)
+            }.first.owner
+            @unmapped -= 1
+          end
+        end
+      end
+      if !@opponents_generated then
+        process_opponent_cycle(world)
       end
     end
 
@@ -79,11 +89,23 @@ module YOGO
       end
     end
 
+    def rand
+      self[[ Kernel::rand(@maxx), Kernel::rand(@maxy) ]]
+    end
+
+    def build_structure(type, tile, owner)
+      s = Structure.create(type, tile)
+      s.owner = owner
+      tile[:structure] = s
+      s
+    end
+
   private
 
     def random!
       generate_tectonic_plates
       generate_countries_and_capitals
+      generate_opponents
     end
 
     # TODO: Generate random plates and give them a height
@@ -145,7 +167,7 @@ module YOGO
         dist = 0.0
 
         while pos.nil? || pos.terrain == :water || !pos.resource.nil? || !pos.structure.nil? || dist < min_dist do
-          pos = self[[ Kernel::rand(@maxx), Kernel::rand(@maxy) ]]
+          pos = self.rand
           if @capitals.length > 0 then
             dist = @capitals.collect { |other| ((other.tile.x - pos.x) ** 2) + ((other.tile.y - pos.y) ** 2) }.min
           else
@@ -171,6 +193,98 @@ module YOGO
 
       @unmapped = (width * height) - @capitals.length
       # @unmapped = 0
+    end
+
+    def generate_opponents
+      @opponents_generated = false
+
+      # Create 6 other opponent corporations
+      6.times do |i|
+        c = Entity::Corporation.new
+        c.name = "Corporation #{i}"
+        @entities << c
+      end
+    end
+
+    def process_opponent_cycle(world)
+      # TODO: Work through each opponent, turn by turn, fulfilling up to:
+      # * 110% of food required
+      # * 110% of power required
+      # * 100% of steam required
+
+      @entities.each do |entity|
+        next unless entity.is_a?(Entity::Corporation)
+
+        # TODO: Calculate what is still demanded, and what is being provided
+        demand = {}
+        @entities.each do |other|
+          other.structures.each do |structure|
+            # TODO: Get every Entity and iterate through all their structures
+            #       + for every requirement, - for everything they provide
+            structure.production.each do |commodity, quantity|
+              demand[commodity] = (demand[commodity] || 0.0) - quantity
+            end
+            structure.consumes.each do |commodity, quantity|
+              demand[commodity] = (demand[commodity] || 0.0) + quantity
+            end
+          end
+        end
+
+        puts "CURRENT: #{demand.inspect}"
+
+        # TODO: Pick the greatest, above zero demand
+        demand.reject { |key, value| value <= 0.0 }
+        commodity = demand.to_a.sort_by { |el| el[1] }.last
+
+        if commodity.nil? then
+          # TODO: Break out if all demands are met, and set @opponents_generated = true
+          @opponents_generated = true
+          break
+        else
+          commodity = commodity[0]
+        end
+
+        puts "I will produce: #{commodity}"
+
+        # TODO: Build a structure which will fulfil the demand
+        struct = case commodity
+        when :food
+          if Kernel::rand > 0.5 then
+            find_and_build(:farm, entity)
+          else
+            find_and_build(:fishing_fleet, entity)
+          end
+        when :power
+          if Kernel::rand > 0.9 then
+            find_and_build(:nuclear_plant, entity)
+          elsif Kernel::rand > 0.5 then
+            find_and_build(:coal_power_station, entity)
+          else
+            find_and_build(:oil_power_station, entity)
+          end
+        when :oil
+          find_and_build(:well, entity)
+        when :coal
+          find_and_build(:mine, :coal, entity)
+        when :iron
+          find_and_build(:mine, :iron, entity)
+        when :steel
+          find_and_build(:foundry, entity)
+        else
+          puts "CAN'T SATISFY: #{commodity}"
+        end
+
+        puts "Built: #{struct}"
+      end
+    end
+
+    def find_and_build(structure, owner, resource=nil)
+      pos = nil
+      while(pos.nil? || (resource && pos.resource != resource) || !pos.valid_structures.include?(structure)) do
+        pos = self.rand
+      end
+
+      build_structure(structure, pos, owner)
     end
 
   end

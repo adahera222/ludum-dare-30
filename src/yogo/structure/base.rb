@@ -53,6 +53,10 @@ module YOGO
         {}
       end
 
+      def consumes
+        {}
+      end
+
       def causes
         {}
       end

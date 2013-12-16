@@ -24,8 +24,16 @@ module YOGO
         2.0
       end
 
+      def self.produces
+        { :power => 10 }
+      end
+
       def production
         { :power => 10 * @production }
+      end
+
+      def consumes
+        { :coal => 5 }
       end
 
       def causes
@@ -35,9 +43,12 @@ module YOGO
       end
 
       def update(world)
-        coal = owner.consume(:coal, 5, world)
-        @production = (coal[:fulfilled].to_f / 5.0).floor.to_i
-        @running_cost += coal[:price]
+        cs = self.consumes
+        cs.each do |commodity, quantity|
+          item = owner.consume(commodity, quantity, world)
+          @production = (item[:fulfilled].to_f / quantity.to_f).floor.to_i
+          @running_cost += item[:price]
+        end
 
         super
       end

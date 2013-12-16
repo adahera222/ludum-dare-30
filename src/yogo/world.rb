@@ -23,7 +23,7 @@ module YOGO
     end
 
     def generating?
-      @map.unmapped > 0
+      @map.unmapped > 0 || !@map.opponents_generated?
     end
 
     def update(game, container)
