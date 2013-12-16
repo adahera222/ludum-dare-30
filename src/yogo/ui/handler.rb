@@ -117,8 +117,8 @@ module YOGO
       end
 
       def winner!(message)
+        critical('You have won! (But feel free to keep playing)')
         critical(message)
-        @game.running = false
       end
 
     private
