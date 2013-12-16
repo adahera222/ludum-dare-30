@@ -10,6 +10,10 @@ module YOGO
         @balance = 15.0
       end
 
+      def name
+        "Player"
+      end
+
       def update(world)
         @stockpile.each do |commodity, data|
           stock = data[:stock]

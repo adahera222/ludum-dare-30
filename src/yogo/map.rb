@@ -166,7 +166,7 @@ module YOGO
       idx = 1
       min_dist = 2 * ((width/8.0) ** 2)
       @capitals = []
-      (width/4).times do
+      (width/4).times do |country_id|
         pos = nil
         dist = 0.0
 
@@ -180,13 +180,14 @@ module YOGO
         end
 
         country = Entity::Country.new
+        country.name = "Country #{country_id}"
         country.color = COUNTRY_COLOURS[idx]
         @entities << country
 
         city = Structure.create(:city, pos)
         city.owner = country
         city.population = 1.0 + Kernel::rand(5.0)
-        city.name = "City #{idx}"
+        city.name = country.name
         pos[:structure] = city
         pos[:state] = country
 

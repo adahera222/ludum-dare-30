@@ -13,8 +13,6 @@ module YOGO
         :power => 0.8
       }
 
-      attr_accessor :name
-
       def initialize
         super
 

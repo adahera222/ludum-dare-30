@@ -16,10 +16,6 @@ module YOGO
         consider_regulations(nil)
       end
 
-      def name
-        "Unknownistan"
-      end
-
       def air_pollution_tax
         @taxes[:air_pollution]
       end

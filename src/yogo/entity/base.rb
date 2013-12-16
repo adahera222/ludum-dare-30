@@ -5,6 +5,7 @@ module YOGO
       attr_accessor :balance
       attr_accessor :color
       attr_reader :structures
+      attr_accessor :name
 
       def initialize
         @balance = 0
