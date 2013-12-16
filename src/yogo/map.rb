@@ -106,8 +106,12 @@ module YOGO
 
     def find_and_build(structure, owner, resource=nil)
       pos = nil
+      count = 0
       while(pos.nil? || (resource && pos.resource != resource) || !pos.valid_structures.include?(structure)) do
         pos = self.rand
+        count += 1
+
+        return false if count >= 500
       end
 
       build_structure(structure, pos, owner)
@@ -166,7 +170,7 @@ module YOGO
                   tile[:terrain] = :grass
                   tile[:resource] = nil
                   tile[:resource] = :arable if Kernel::rand < 0.10
-                  tile[:resource] = :oil if Kernel::rand < 0.025
+                  tile[:resource] = :oil if Kernel::rand < 0.03
                   tile[:resource] = hill_resources[Kernel::rand(hill_resources.length - 1)] if tile[:resource].nil? && Kernel::rand < 0.05
                 end
               end

@@ -141,11 +141,13 @@ module YOGO
             # BUILD IT
             if @balance >= d[1].setup_cost + (@structures.count * 10.0) then
               s = world.map.find_and_build(d[0], self)
-              @balance -= d[1].setup_cost
-              world.ui_handler.location_alert("#{self.name} has just built a new #{s.name}", s.tile)
-              @purchase_triggers[d[0]] = -5.0
-              @minimum_calcs = nil
-              break
+              if s then
+                @balance -= d[1].setup_cost
+                world.ui_handler.location_alert("#{self.name} has just built a new #{s.name}", s.tile)
+                @purchase_triggers[d[0]] = -5.0
+                @minimum_calcs = nil
+                break
+              end
             end
           end
 
