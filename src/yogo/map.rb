@@ -198,7 +198,6 @@ module YOGO
         end
 
         country = Entity::Country.new
-        country.name = "Country #{country_id}"
         country.color = COUNTRY_COLOURS[idx]
         @entities << country
 
@@ -299,9 +298,12 @@ module YOGO
         else
           puts "CAN'T SATISFY: #{commodity}"
         end
-        entity.world_gen_structure(struct)
-
-        puts "Built: #{struct}"
+        if struct then
+          entity.world_gen_structure(struct)
+          puts "Built: #{struct}"
+        else
+          puts "Count not build: #{struct}"
+        end
       end
     end
 

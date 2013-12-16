@@ -14,6 +14,8 @@ module YOGO
 
         @taxes = { :air_pollution => 0.0, :water_pollution => 0.0 }
         consider_regulations(nil)
+
+        generate_random_name
       end
 
       def air_pollution_tax
@@ -91,6 +93,20 @@ module YOGO
             world.ui_handler.notice("#{self.name} has changed their #{detail} tax rate to #{sprintf('$%.2f per 1 unit', @taxes[detail])}") if world
           end
         end
+      end
+
+      def generate_random_name
+        prefix = %w( Arz San Cu Gro Tav Bor Zan )
+        suffix = %w( istan ico etnam ia )
+
+        attempt = nil
+        @@used_choices ||= []
+        while(attempt.nil? || @@used_choices.include?(attempt)) do
+          attempt = "#{prefix[Kernel::rand(prefix.length-1)]}#{suffix[Kernel::rand(suffix.length-1)]}"
+        end
+
+        @@used_choices << attempt
+        self.name = attempt
       end
 
     end
