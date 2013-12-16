@@ -24,7 +24,7 @@ module YOGO
         7
       end
 
-      def production
+      def self.produces
         { :power => 13 }
       end
 

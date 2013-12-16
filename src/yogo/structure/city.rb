@@ -17,6 +17,10 @@ module YOGO
         "City"
       end
 
+      def self.produces
+        {}
+      end
+
       def income
         nil
       end
@@ -28,10 +32,6 @@ module YOGO
       def name
         # "#{@name} [#{citizens}]"
         "#{@name} [#{sprintf('%.2f', @population)}]"
-      end
-
-      def production
-        {}
       end
 
       def consumes

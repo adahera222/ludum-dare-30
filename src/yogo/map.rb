@@ -104,6 +104,15 @@ module YOGO
       s
     end
 
+    def find_and_build(structure, owner, resource=nil)
+      pos = nil
+      while(pos.nil? || (resource && pos.resource != resource) || !pos.valid_structures.include?(structure)) do
+        pos = self.rand
+      end
+
+      build_structure(structure, pos, owner)
+    end
+
   private
 
     def random!
@@ -207,6 +216,7 @@ module YOGO
       6.times do |i|
         c = Entity::Corporation.new
         c.name = "Corporation #{i}"
+        c.balance = -25.0
         @entities << c
       end
     end
@@ -270,11 +280,11 @@ module YOGO
             find_and_build(:oil_power_station, entity)
           end
         when :oil
-          find_and_build(:well, entity, :oil)
+          find_and_build(:well, entity)
         when :coal
-          find_and_build(:mine, entity, :coal)
+          find_and_build(:coal_mine, entity)
         when :iron
-          find_and_build(:mine, entity, :iron)
+          find_and_build(:iron_mine, entity)
         when :steel
           find_and_build(:foundry, entity)
         else
@@ -284,15 +294,6 @@ module YOGO
 
         puts "Built: #{struct}"
       end
-    end
-
-    def find_and_build(structure, owner, resource=nil)
-      pos = nil
-      while(pos.nil? || (pos.resource != resource) || !pos.valid_structures.include?(structure)) do
-        pos = self.rand
-      end
-
-      build_structure(structure, pos, owner)
     end
 
   end

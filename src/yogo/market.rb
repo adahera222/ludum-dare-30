@@ -2,16 +2,16 @@ module YOGO
   class Market
 
     STOCK_SEED_PRICES = {
-      :iron => 4,
-      :coal => 4,
-      :oil => 6,
-      :food => 0.8,
-      :steel => 10,
-      :power => 0.8
+      :iron => 2,
+      :coal => 2,
+      :oil => 3,
+      :food => 0.4,
+      :steel => 5,
+      :power => 0.4
     }
 
 
-    attr_reader :demand, :stocks
+    attr_reader :stocks
 
     def initialize
       @stocks = Hash.new { |hash, commodity| hash[commodity] = { :available => 0, :price => STOCK_SEED_PRICES[commodity].to_f } }
@@ -19,7 +19,20 @@ module YOGO
     end
 
     def update(world)
+      @last_stocks = @stocks.dup
       reset_demand
+    end
+
+    def demand
+      @last_demand || @demand
+    end
+
+    def available(commodity)
+      @last_stocks[commodity][:available]
+    end
+
+    def live_demand
+      @demand
     end
 
     def purchase(commodity, quantity, owner)
@@ -69,6 +82,7 @@ module YOGO
   private
 
     def reset_demand
+      @last_demand = @demand.dup if @demand
       @demand = Hash.new { |hash, commodity| hash[commodity] = 0 }
     end
 

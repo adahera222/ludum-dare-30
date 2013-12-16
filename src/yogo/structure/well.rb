@@ -24,7 +24,7 @@ module YOGO
         3
       end
 
-      def production
+      def self.produces
         { :oil => 1 }
       end
 

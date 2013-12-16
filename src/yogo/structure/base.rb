@@ -59,7 +59,7 @@ module YOGO
       end
 
       def production
-        {}
+        self.class.produces
       end
 
       def consumes
@@ -68,6 +68,10 @@ module YOGO
 
       def causes
         {}
+      end
+
+      def production_rate
+        @production
       end
 
       def update(world)

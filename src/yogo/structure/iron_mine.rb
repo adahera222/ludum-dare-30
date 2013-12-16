@@ -2,14 +2,14 @@ require 'yogo/structure/base'
 
 module YOGO
   module Structure
-    class Mine < Base
+    class IronMine < Base
 
       def self.name
-        "Mine"
+        "Iron Mine"
       end
 
       def self.description
-        "+5 iron or coal"
+        "+5 iron"
       end
 
       def self.setup_cost
@@ -21,11 +21,11 @@ module YOGO
       end
 
       def self.valid_tile?(tile)
-        [ :coal, :iron ].include?(tile.resource)
+        tile.resource == :iron
       end
 
-      def production
-        { @tile.resource => 5 }
+      def self.produces
+        { :iron => 5 }
       end
 
       def causes

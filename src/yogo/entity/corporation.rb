@@ -13,6 +13,7 @@ module YOGO
 
         @demand_triggers = {}
         @decommission_triggers = {}
+        @purchase_triggers = {}
       end
 
       def margin(commodity)
@@ -38,7 +39,7 @@ module YOGO
 
         decide_action(world)
 
-        if @balance < -50.0 then
+        if @balance < -100.0 then
           @structures.each do |structure|
             structure.tile[:structure] = nil
           end
@@ -51,7 +52,7 @@ module YOGO
 
       def world_gen_structure(structure)
         structure.consumes.each do |c, q|
-          @stockpile[c][:stock] += q * 3
+          @stockpile[c][:stock] += q * 2
           @stockpile[c][:cost] = Market::STOCK_SEED_PRICES[c]
         end
         structure.production.each do |c, q|
@@ -91,6 +92,7 @@ module YOGO
             puts "#{self.name}: DECOM: #{structure.inspect} pot prof: #{profitability}"
             if profitability > 1.0 then
               @decommission_triggers[structure] = 0.0
+              @purchase_triggers[structure.type] = -100.0
               structure.reopen!
               world.ui_handler.location_alert("#{self.name} has reopened #{structure.name}", structure.tile)
             end
@@ -105,6 +107,7 @@ module YOGO
             # Shut it down for the moment
             structure.shutdown!
             world.ui_handler.location_alert("#{self.name} has temporarily closed #{structure.name}", structure.tile)
+            @purchase_triggers[structure.type] = -100.0
           end
 
           if @decommission_triggers[structure] <= -1.5 then
@@ -112,11 +115,44 @@ module YOGO
             structure.tile[:structure] = nil
             @structures -= [ structure ]
             world.ui_handler.location_alert("#{self.name} has fully decommissioned a #{structure.name}", structure.tile)
+            @purchase_triggers[structure.type] = -100.0
           end
         end
         puts "#{self.name}: DECOM: #{@decommission_triggers.inspect}"
 
         # TODO: Decide to build a structure
+        Structure::STRUCTURES.each do |type, klass|
+          next unless klass.respond_to?(:running_cost)
+
+          potential_income = 0.0
+          potential_costs = klass.running_cost.to_f
+          klass.produces.each do |c,q|
+            potential_income += world.market.price(c) * 0.9 * ([ world.market.demand[c], q ].min / (world.market.available(c) + 1.0))
+          end
+          profit = potential_income / potential_costs
+          @purchase_triggers[type] ||= 0.0
+          @purchase_triggers[type] += (profit / (klass.setup_cost.to_f / 4.0)) * Kernel::rand
+          @purchase_triggers[type] = -5.0 if @purchase_triggers[type] < -5.0
+        end
+        puts "#{self.name}: NEW: #{@purchase_triggers.inspect}"
+        Structure::STRUCTURES.to_a.reject { |d| !(d[1].respond_to?(:setup_cost)) }.sort_by { |d| d[1].setup_cost }.reverse.each do |d|
+          type = d[0]
+          if @purchase_triggers[type] > 0.5 then
+
+            # BUILD IT
+            if @balance >= d[1].setup_cost + (@structures.count * 10.0) then
+              s = world.map.find_and_build(d[0], self)
+              @balance -= d[1].setup_cost
+              world.ui_handler.location_alert("#{self.name} has just built a new #{s.name}", s.tile)
+              @purchase_triggers[d[0]] = -5.0
+              @minimum_calcs = nil
+              break
+            end
+          end
+
+        end
+
+
         # TODO: Decide to lobby to reduce costs
         # TODO: Decide to lobby combatively
       end

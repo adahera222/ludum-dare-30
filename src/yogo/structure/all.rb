@@ -1,4 +1,5 @@
-require 'yogo/structure/mine'
+require 'yogo/structure/iron_mine'
+require 'yogo/structure/coal_mine'
 require 'yogo/structure/well'
 require 'yogo/structure/city'
 require 'yogo/structure/farm'
@@ -13,7 +14,8 @@ module YOGO
   module Structure
 
     STRUCTURES = {
-      :mine => Mine,
+      :iron_mine => IronMine,
+      :coal_mine => CoalMine,
       :well => Well,
       :city => City,
       :farm => Farm,

@@ -43,7 +43,7 @@ module YOGO
       @market.update(self)
       @map.update(self)
 
-      puts @market.demand.inspect
+      puts @market.live_demand.inspect
 
       @air_pollution = 0.0
       @water_pollution = 0.0
@@ -84,7 +84,7 @@ module YOGO
       if @air_pollution.nil? then
         0.0
       else
-        -0.5 + (@air_pollution / ((@map.width * @map.height) / 500.0))
+        -0.5 + (@air_pollution / ((@map.width * @map.height) / 750.0))
       end
     end
   end

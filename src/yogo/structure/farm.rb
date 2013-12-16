@@ -28,10 +28,6 @@ module YOGO
         { :food => 3 }
       end
 
-      def production
-        { :food => 3 }
-      end
-
       def causes
         c = { :air_pollution => -0.005 }
         if @tile.resource == :arable then

@@ -12,7 +12,7 @@ module YOGO
     MINIMAP_WIDTH = SIDEBAR_WIDTH
 
     KEYS = {
-      'm' => [ :mine, :well ],
+      'm' => [ :iron_mine, :coal_mine, :well ],
       'f' => [ :farm, :fishing_fleet ],
       'p' => [ :coal_power_station ],
       'o' => [ :oil_power_station ],
@@ -450,6 +450,12 @@ module YOGO
         vy = buttons_y
 
         if structure.profitability then
+          if structure.running? then
+            graphics.draw_string("Production: #{sprintf('%.0f%%', structure.production_rate * 100.0)}", vx, vy)
+          else
+            graphics.draw_string("Production: Closed", vx, vy)
+          end
+          vy += 15
           graphics.draw_string("Profitability: #{sprintf('%.2f%%', structure.profitability * 100.0)}", vx, vy)
           vy += 15
         end
