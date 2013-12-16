@@ -6,7 +6,7 @@ module YOGO
 
       TERRAIN = [ :water, :grass, :hills, :mountains ]
       RESOURCES = [ :oil, :coal, :iron, :uranium, :aluminum, :fish, :arable, :blank ]
-      STRUCTURES = [ :mine, :coal_power_station, :factory, :well, :farm, :fishing_fleet, :platform, :plantation, :wind_farm, :solar_farm, :nuclear_plant, :oil_power_station, :city ]
+      STRUCTURES = [ :iron_mine, :coal_power_station, :factory, :well, :farm, :fishing_fleet, :platform, :plantation, :wind_farm, :solar_farm, :nuclear_plant, :oil_power_station, :city, :coal_mine, :foundry ]
       UI = [ :selected, :production, :power, :land_pollution, :air_pollution, :water_pollution, :cash, :swamp ]
       UI16 = [ :cash, :clean_air, :dirty_air, :clean_water, :dirty_water, :low_temp, :high_temp, :crap_person, :person ]
 
