@@ -29,6 +29,7 @@ module YOGO
     end
 
     def init(container, game)
+      @container = container
       @game = game
       @ui_handler = game.ui_handler
       @tileset = @ui_handler.tileset
@@ -61,6 +62,7 @@ module YOGO
 
       @stock_overlay = false
       @opponents_overlay = false
+      @menu_overlay = false
       @overlay_background = Color.new(0.0,0.0,0.0,0.8)
     end
 
@@ -81,17 +83,19 @@ module YOGO
         if @opponents_overlay then
           draw_opponents_overlay(graphics)
         end
+
+        if @menu_overlay then
+          draw_menu_overlay(graphics)
+        end
       end
 
       @ui_handler.render(container, graphics)
 
       graphics.set_font(@default_font)
-      graphics.draw_string("(ESC to exit)", 8, container.height - 30)
     end
 
     def update(container, game, delta)
       input = container.get_input
-      container.exit if input.is_key_down(Input::KEY_ESCAPE)
 
       @ui_handler.update(container, delta)
       @world.update(container, delta)
@@ -120,6 +124,16 @@ module YOGO
     end
 
     def keyPressed(keycode, char)
+      @menu_overlay = !@menu_overlay if keycode == Input::KEY_ESCAPE
+
+      if @menu_overlay then
+        case char.chr
+        when 'q'
+          @container.exit
+        end
+        return
+      end
+
       if @game.running then
         if char == 13 then
           @world.turn!
@@ -625,6 +639,18 @@ module YOGO
           graphics.draw_string("#{entity.name} BANKRUPT", vx, vy)
         end
         vy += 20
+      end
+    end
+
+    def draw_menu_overlay(graphics)
+      graphics.set_color(@overlay_background)
+      graphics.fill_rect(0, 0, @screen_x, @screen_y)
+      graphics.fill_rect(50, 50, @screen_x - 50, @screen_y - 50)
+
+      [ 'MENU', 'q - quit' ].each_with_index do |line, idx|
+        tw = @default_font.get_width(line)
+        graphics.set_color(@font_color)
+        graphics.draw_string(line, (@screen_x / 2) - (tw/2), (@screen_y / 2) + (idx * 18))
       end
     end
   end
