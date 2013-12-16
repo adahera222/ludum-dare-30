@@ -206,15 +206,17 @@ module YOGO
             if building then
               price = Structure.price(building)
               if price > @player.balance then
-                @ui_handler.critical("A #{Structure.name(building)} costs $#{price}m but you only have #{sprintf('$%.2fm', @player.balance)}")
+                @ui_handler.mistake("A #{Structure.name(building)} costs $#{price}m but you only have #{sprintf('$%.2fm', @player.balance)}")
               else
                 @player.balance -= price
                 s = @map.build_structure(building, @current_selected, @world.player)
+                @ui_handler.sounds.play(:build)
                 reset_minimap
                 @ui_handler.immediate("You have built a new #{s.name} in #{@current_selected.state.name}")
               end
             else
               puts "UNKNOWN: #{char}"
+              @ui_handler.sounds.play(:invalid)
             end
           end
         end
@@ -235,6 +237,11 @@ module YOGO
 
           puts "Rel: #{[rx, ry].inspect} => Tile: #{[tx, ty].inspect}"
           @current_selected = @map[[tx, ty]]
+
+          # if @current_selected.structure && @current_selected.structure.owner == @player then
+          #   @ui_handler.sounds.play(:select)
+          # end
+
           reset_viewport
           reset_minimap
         end

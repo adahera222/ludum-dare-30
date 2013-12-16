@@ -1,5 +1,6 @@
 require 'yogo/ui/tileset'
 require 'yogo/ui/fonts'
+require 'yogo/ui/sounds'
 
 module YOGO
   module UI
@@ -31,7 +32,13 @@ module YOGO
         @font ||= YOGO::UI::Fonts.new
       end
 
+      def sounds
+        @sounds ||= YOGO::UI::Sounds.new
+      end
+
       def update(container, delta)
+        sounds.update(delta)
+
         if @text.length == 0
           @timer = 0.0
         else
@@ -44,6 +51,7 @@ module YOGO
 
         if @timer >= TEXT_THROTTLE_TIME then
           msg = @text.shift
+          sounds.play(:notification)
           @list.unshift([ msg, TEXT_SHOW_TIME ])
           @timer = 0.0
         end
@@ -108,6 +116,12 @@ module YOGO
       end
 
       def critical(message)
+        sounds.play(:critical)
+        @critical << [ message, TEXT_SHOW_TIME * 2 ]
+      end
+
+      def mistake(message)
+        sounds.play(:invalid)
         @critical << [ message, TEXT_SHOW_TIME * 2 ]
       end
 
