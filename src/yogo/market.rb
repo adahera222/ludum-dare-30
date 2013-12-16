@@ -4,7 +4,7 @@ module YOGO
     attr_reader :demand, :stocks
 
     def initialize
-      @stocks = Hash.new { |hash, commodity| hash[commodity] = { :available => 0, :offers => [] } }
+      @stocks = Hash.new { |hash, commodity| hash[commodity] = { :available => 0, :price => 0.0 } }
       reset_demand
     end
 
@@ -14,41 +14,20 @@ module YOGO
 
     def purchase(commodity, quantity, owner)
       quantity = quantity.ceil
-      fulfilled = 0
-      total_price = 0
-      @stocks[commodity][:offers].each_with_index do |offer, idx|
-        required = quantity - fulfilled
-        consumed = [ offer[:available], required ].min
-        offer[:available] -= consumed
-        owner.balance -= consumed * offer[:price]
-        offer[:owner].balance += consumed * offer[:price]
-        total_price += consumed * offer[:price]
-        fulfilled += consumed
-        @stocks[commodity][:available] -= consumed
+      data = @stocks[commodity]
 
-        if offer[:available] == 0 then
-          @stocks[commodity][:offers][idx] = nil
-        end
+      puts "#{owner} requested #{quantity} #{commodity}"
 
-        break if fulfilled == quantity
-      end
-      @stocks[commodity][:offers].compact!
-      @demand[commodity] += (quantity - fulfilled)
+      fulfilled = [ data[:available], quantity ].min
+      data[:available] -= fulfilled
+      data[:price] *= (1.0 + (quantity * 0.002))
+      total_price = fulfilled * data[:price]
 
-      if fulfilled <= 0.0 then
-        unit_price = 0.0
-      else
-        unit_price = total_price.to_f / fulfilled.to_f 
-      end
+      @demand[commodity] += quantity - fulfilled
 
-      result = { :fulfilled => fulfilled, :price => total_price, :unit_price => unit_price }
-
-      if total_price <= 0.0 then
-        puts result.inspect
-      end
-
-      puts "#{owner} requested #{quantity} #{commodity}, got #{fulfilled}, at #{total_price} (#{unit_price})"
-
+      owner.balance -= total_price
+      puts "    => got #{fulfilled}, at #{data[:price]} = #{total_price} (#{data[:available]} in stock)"
+      result = { :fulfilled => fulfilled, :price => total_price, :unit_price => data[:price] }
       result
     end
 
@@ -58,11 +37,19 @@ module YOGO
 
     def offer(commodity, quantity, price, owner)
       return if quantity <= 0.0
-      @stocks[commodity][:available] += quantity
-      @stocks[commodity][:offers] << { :owner => owner, :price => price, :available => quantity }
-      @stocks[commodity][:offers].sort_by! { |offer| offer[:price] }
       puts "#{owner} offers #{quantity} #{commodity} at #{price}"
-      # puts @stocks[commodity].inspect
+
+      data = @stocks[commodity]
+
+      total = data[:available] * data[:price]
+      data[:available] += quantity
+      data[:price] = ((total + (quantity * price)) / data[:available]) * (1.0 - (quantity * 0.002))
+
+      @demand[commodity] -= quantity
+
+      total_sale = data[:price] * quantity
+      puts "     => sold #{quantity} #{commodity} at #{data[:price]} = #{total_sale} (#{data[:available]} in stock)"
+      owner.balance += total_sale
     end
 
   private

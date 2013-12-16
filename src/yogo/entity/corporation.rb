@@ -24,7 +24,7 @@ module YOGO
       end
 
       def margin(commodity)
-        1.0
+        0.1
       end
 
       def minimum(commodity)
