@@ -16,6 +16,14 @@ module YOGO
         tile.terrain != :water
       end
 
+      def self.setup_cost
+        13
+      end
+
+      def self.running_cost
+        2.0
+      end
+
       def production
         { :power => 10 * @production }
       end
@@ -27,8 +35,6 @@ module YOGO
       end
 
       def update(world)
-        @running_cost = 1.0
-
         coal = owner.consume(:coal, 5, world)
         @production = (coal[:fulfilled].to_f / 5.0).floor.to_i
         @running_cost += coal[:price]

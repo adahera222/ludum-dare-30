@@ -2,36 +2,36 @@ require 'yogo/structure/base'
 
 module YOGO
   module Structure
-    class Well < Base
+    class NuclearPlant < Base
 
       def self.name
-        "Well"
+        "Nuclear Plant"
       end
 
       def self.description
-        "+5 oil"
+        "+13 power"
       end
 
       def self.valid_tile?(tile)
-        tile.resource == :oil
+        tile.terrain != :water
       end
 
       def self.setup_cost
-        5
+        25
       end
 
       def self.running_cost
-        3
+        5
       end
 
       def production
-        { :oil => 5 }
+        { :power => 13 }
       end
 
       def causes
-        { :air_pollution => 0.01 * @production,
-          :water_pollution => 0.2 * @production
-        }
+        c = { :air_pollution => 0.04 }
+        c[:water_pollution] = 0.04
+        c
       end
 
     end

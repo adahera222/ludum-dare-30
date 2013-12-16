@@ -16,7 +16,7 @@ module YOGO
       'f' => [ :farm, :fishing_fleet ],
       'p' => [ :coal_power_station ],
       'o' => [ :oil_power_station ],
-      'n' => [ :nuclear_power ],
+      'n' => [ :nuclear_plant ],
       'b' => [ :wind_farm ],
       'y' => [ :foundry ]
     }
@@ -129,22 +129,22 @@ module YOGO
             # Lobby lower air tax
             state.lobby(:air_pollution, -1.0, @player)
             @player.balance -= 1.0
-            @ui_handler.immediate("You invest $1 lobbying for lower air pollution regulation")
+            @ui_handler.immediate("You invest $1m lobbying for lower air pollution regulation")
           when '='
             # Lobby raise air tax
             state.lobby(:air_pollution, 1.0, @player)
             @player.balance -= 1.0
-            @ui_handler.immediate("You invest $1 lobbying for greater air pollution regulation")
+            @ui_handler.immediate("You invest $1m lobbying for greater air pollution regulation")
           when '['
             # Lobby lower water tax
             state.lobby(:water_pollution, -1.0, @player)
             @player.balance -= 1.0
-            @ui_handler.immediate("You invest $1 lobbying for lower water pollution regulation")
+            @ui_handler.immediate("You invest $1m lobbying for lower water pollution regulation")
           when '='
             # Lobby raise water tax
             state.lobby(:water_pollution, 1.0, @player)
             @player.balance -= 1.0
-            @ui_handler.immediate("You invest $1 lobbying for greater water pollution regulation")
+            @ui_handler.immediate("You invest $1m lobbying for greater water pollution regulation")
           end
 
         elsif @current_selected.structure.nil? then
@@ -162,11 +162,17 @@ module YOGO
             end
           end
           if building then
-            s = Structure.create(building, @current_selected)
-            s.owner = @world.player
-            @current_selected[:structure] = s
-            reset_minimap
-            @ui_handler.immediate("You have built a new #{s.name} in #{@current_selected.state.name}")
+            price = Structure.price(building)
+            if price > @player.balance then
+              @ui_handler.immediate("A #{Structure.name(building)} costs $#{price}m but you only have #{sprintf('$%.2fm', @player.balance)}")
+            else
+              @player.balance -= price
+              s = Structure.create(building, @current_selected)
+              s.owner = @world.player
+              @current_selected[:structure] = s
+              reset_minimap
+              @ui_handler.immediate("You have built a new #{s.name} in #{@current_selected.state.name}")
+            end
           else
             puts "UNKNOWN: #{char}"
           end
@@ -272,7 +278,7 @@ module YOGO
       sprite = @tileset.ui(:cash)
       sprite.draw(sidebar_x + 2, 2)
       graphics.set_color(@font_color)
-      graphics.draw_string(@world.player.balance.to_i.to_s, sidebar_x + 2 + 4 + TILE_SIZE, 10)
+      graphics.draw_string(sprintf('$%.2fm', @world.player.balance), sidebar_x + 2 + 4 + TILE_SIZE, 10)
 
       minimap_x = sidebar_x + 2
       minimap_y = 2 + TILE_SIZE + 5
@@ -421,14 +427,15 @@ module YOGO
         # Draw out the structures we can construct here
         @current_selected.valid_structures.each_with_index do |type, idx|
           vx = buttons_x
-          vy = buttons_y + (idx * (TILE_SIZE + 5))
+          vy = buttons_y + (idx * (TILE_SIZE + 5 + 20))
 
           key = KEYS.find { |k, s| s.include?(type) }
 
           tile_buffer.draw(vx, vy)
           @tileset.structure(type).draw(vx, vy)
           graphics.draw_string("(#{key[0]}) #{Structure.name(type)}", vx + 5 + TILE_SIZE, vy)
-          graphics.draw_string(Structure.description(type), vx + 5 + TILE_SIZE, vy + 16)
+          graphics.draw_string(sprintf("$%dm + $%.1fm/turn", Structure.price(type), Structure.running_cost(type)), vx + 5 + TILE_SIZE, vy + 16)
+          graphics.draw_string(Structure.description(type), vx + 5 + TILE_SIZE, vy + 32)
         end
       else
         # Show the structure details

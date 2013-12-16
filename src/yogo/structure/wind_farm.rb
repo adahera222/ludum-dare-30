@@ -2,22 +2,22 @@ require 'yogo/structure/base'
 
 module YOGO
   module Structure
-    class Well < Base
+    class WindFarm < Base
 
       def self.name
-        "Well"
+        "Wind Farm"
       end
 
       def self.description
-        "+5 oil"
+        "+5 power"
       end
 
       def self.valid_tile?(tile)
-        tile.resource == :oil
+        tile.terrain != :water
       end
 
       def self.setup_cost
-        5
+        6
       end
 
       def self.running_cost
@@ -25,13 +25,11 @@ module YOGO
       end
 
       def production
-        { :oil => 5 }
+        { :power => 5 }
       end
 
       def causes
-        { :air_pollution => 0.01 * @production,
-          :water_pollution => 0.2 * @production
-        }
+        {}
       end
 
     end

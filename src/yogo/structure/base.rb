@@ -9,6 +9,14 @@ module YOGO
       STRUCTURES[type].description
     end
 
+    def self.price(type)
+      STRUCTURES[type].setup_cost
+    end
+
+    def self.running_cost(type)
+      STRUCTURES[type].running_cost
+    end
+
     def self.create(type, pos)
       klass = STRUCTURES[type]
       klass.new(type, pos)
@@ -53,6 +61,12 @@ module YOGO
         @notes = []
         @icons = []
 
+        if self.class.respond_to?(:running_cost) then
+          @running_cost = self.class.running_cost.to_f
+        else
+          @running_cost = 0.0
+        end
+
         causes.each do |detail, effect|
           @tile[detail] += effect
           @running_cost += @tile.state.cost_impact(detail, effect, self)
@@ -65,21 +79,6 @@ module YOGO
         end
 
       end
-
-      # def production
-      #   case @type
-      #   when :power_station
-      #     { :power => 10 }
-      #   when :nuclear_plant
-      #     { :power => 13 }
-      #   when :wind_farm
-      #     { :power => 8 }
-      #   when :solar_farm
-      #     { :power => 5 }
-      #   when :factory
-      #     { :production => 10 }
-      #   end
-      # end
 
     end
   end

@@ -16,6 +16,14 @@ module YOGO
         tile.terrain != :water
       end
 
+      def self.setup_cost
+        2
+      end
+
+      def self.running_cost
+        1
+      end
+
       def production
         { :food => 3 }
       end
@@ -30,15 +38,6 @@ module YOGO
           c[:water_pollution] = 0.012
         end
         c
-      end
-
-      def update(world)
-        @running_cost = 1.0
-        super
-
-        # Trees, stuff like that to absorb the pollution
-        @tile[:air_pollution] -= 0.005
-
       end
 
     end

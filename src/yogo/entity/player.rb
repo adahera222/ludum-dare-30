@@ -7,7 +7,7 @@ module YOGO
       def initialize
         super
 
-        @balance = 0
+        @balance = 15.0
       end
 
       def update(world)

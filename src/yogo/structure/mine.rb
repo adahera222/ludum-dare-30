@@ -12,6 +12,14 @@ module YOGO
         "+5 iron or coal"
       end
 
+      def self.setup_cost
+        33
+      end
+
+      def self.running_cost
+        10
+      end
+
       def self.valid_tile?(tile)
         [ :coal, :iron ].include?(tile.resource)
       end
@@ -24,12 +32,6 @@ module YOGO
         { :air_pollution => 0.01 * @production,
           :water_pollution => 0.1 * @production
         }
-      end
-
-      def update(world)
-        @running_cost = 10.0
-
-        super
       end
 
     end
