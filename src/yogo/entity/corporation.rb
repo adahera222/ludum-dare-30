@@ -41,7 +41,7 @@ module YOGO
           stock = [ 0, data[:stock] - minimum(commodity) ].max
           price = data[:cost] * (1.0 + margin(commodity))   # Default 10% margin
           world.market.offer(commodity, stock, price, self)
-          @stockpile[commodity][:stock] = 0
+          @stockpile[commodity][:stock] -= stock
         end
 
         if @balance < -50.0 then

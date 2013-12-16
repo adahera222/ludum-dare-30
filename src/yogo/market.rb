@@ -23,7 +23,7 @@ module YOGO
       data[:price] *= (1.0 + (quantity * 0.002))
       total_price = fulfilled * data[:price]
 
-      @demand[commodity] += quantity - fulfilled
+      @demand[commodity] += quantity
 
       owner.balance -= total_price
       puts "    => got #{fulfilled}, at #{data[:price]} = #{total_price} (#{data[:available]} in stock)"
