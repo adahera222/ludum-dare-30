@@ -222,20 +222,22 @@ module YOGO
     end
 
     def mouseClicked(button, x, y, count)
-      if x > @screen_x - SIDEBAR_WIDTH then
-        # TODO: Handle sidebar click
-      else
-        # Handle map click
-        rx = (x / TILE_SIZE).floor
-        ry = (y / TILE_SIZE).floor
+      if @game.running then
+        if x > @screen_x - SIDEBAR_WIDTH then
+          # TODO: Handle sidebar click
+        else
+          # Handle map click
+          rx = (x / TILE_SIZE).floor
+          ry = (y / TILE_SIZE).floor
 
-        tx = @map_min_x + rx
-        ty = @map_min_y + ry
+          tx = @map_min_x + rx
+          ty = @map_min_y + ry
 
-        puts "Rel: #{[rx, ry].inspect} => Tile: #{[tx, ty].inspect}"
-        @current_selected = @map[[tx, ty]]
-        reset_viewport
-        reset_minimap
+          puts "Rel: #{[rx, ry].inspect} => Tile: #{[tx, ty].inspect}"
+          @current_selected = @map[[tx, ty]]
+          reset_viewport
+          reset_minimap
+        end
       end
     end
 
