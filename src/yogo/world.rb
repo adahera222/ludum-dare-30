@@ -11,6 +11,7 @@ module YOGO
 
     attr_reader :map, :market
     attr_reader :population
+    attr_reader :month, :year
 
     def initialize
       @map = Map.new(40,40)
@@ -18,6 +19,9 @@ module YOGO
 
       @player = Entity::Player.new
       @map.entities << @player
+
+      @year = 2030
+      @month = 1
 
       @turn = 0
     end
@@ -37,6 +41,13 @@ module YOGO
 
     def turn!
       @turn += 1
+
+      @month += 1
+      if @month == 13 then
+        @month = 1
+        @year += 1
+      end
+
       @ui_handler.turn!
       puts "---------"
       puts "Turn: #{@turn}"

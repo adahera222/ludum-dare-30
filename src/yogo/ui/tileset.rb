@@ -8,6 +8,7 @@ module YOGO
       RESOURCES = [ :oil, :coal, :iron, :uranium, :aluminum, :fish, :arable, :blank ]
       STRUCTURES = [ :mine, :coal_power_station, :factory, :well, :farm, :fishing_fleet, :platform, :plantation, :wind_farm, :solar_farm, :nuclear_plant, :oil_power_station, :city ]
       UI = [ :selected, :production, :power, :land_pollution, :air_pollution, :water_pollution, :cash, :swamp ]
+      UI16 = [ :cash, :clean_air, :dirty_air, :clean_water, :dirty_water, :low_temp, :high_temp, :crap_person, :person ]
 
       TERRAIN_COLORS = { :water => Color.new(14, 53, 75, 255),
                          :grass => Color.new(69, 145, 26, 255),
@@ -32,6 +33,7 @@ module YOGO
           :terrain => {},
           :resource => {},
           :ui => {},
+          :ui16 => {},
           :structure => {}
         }
 
@@ -50,6 +52,10 @@ module YOGO
         UI.each_with_index do |name, idx|
           @tiles[:ui][name] = @sheet.get_sprite("ui_#{sprintf('%01d', idx)}.png")
         end
+
+        UI16.each_with_index do |name, idx|
+          @tiles[:ui16][name] = @sheet.get_sprite("ui16_#{sprintf('%01d', idx)}.png")
+        end
       end
 
       def terrain(type)
@@ -66,6 +72,10 @@ module YOGO
 
       def ui(type)
         @tiles[:ui][type]
+      end
+
+      def ui16(type)
+        @tiles[:ui16][type]
       end
 
       def terrain_color(type)

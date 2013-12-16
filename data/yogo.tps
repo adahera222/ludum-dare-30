@@ -175,6 +175,7 @@
             <filename>resources</filename>
             <filename>ui</filename>
             <filename>structures</filename>
+            <filename>ui16</filename>
         </array>
         <key>ignoreFileList</key>
         <array/>

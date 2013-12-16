@@ -1,3 +1,5 @@
+require 'date'
+
 java_import org.newdawn.slick.state.BasicGameState
 java_import org.newdawn.slick.Color
 java_import org.newdawn.slick.fills.GradientFill
@@ -314,10 +316,32 @@ module YOGO
       graphics.set_color(@sidebar_background)
       graphics.fill_rect(sidebar_x, 0, SIDEBAR_WIDTH, @screen_y)
 
-      sprite = @tileset.ui(:cash)
-      sprite.draw(sidebar_x + 2, 2)
+
+      tx = sidebar_x + 2 + 4 + 16
+      ty = 1
+
+      sprite = @tileset.ui16(:cash)
+      sprite.draw(sidebar_x + 2, ty)
       graphics.set_color(@font_color)
-      graphics.draw_string(sprintf('$%.2fm', @world.player.balance), sidebar_x + 2 + 4 + TILE_SIZE, 10)
+      graphics.draw_string(sprintf('$%.2fm', @world.player.balance), tx, ty)
+
+      date = "#{Date::ABBR_MONTHNAMES[@world.month]} #{@world.year}"
+      tw = graphics.get_font.get_width(date)
+      graphics.draw_string(date, @screen_x - (tw + 4), ty)
+
+      ty += 18
+      sprite = @tileset.ui16(:low_temp)
+      sprite.draw(sidebar_x + 2, ty)
+      sprite = @tileset.ui16(:high_temp)
+      sprite.draw(sidebar_x + 2, ty, Color.new(1.0,1.0,1.0, @world.warming_rate))
+      graphics.set_color(@font_color)
+      graphics.draw_string(sprintf('%d%%', @world.warming_rate * 100.0), tx, ty)
+
+      pop = sprintf('%.1f', @world.population.to_f)
+      tw = graphics.get_font.get_width(pop)
+      graphics.draw_string(pop, @screen_x - (tw + 4), ty)
+      sprite = @tileset.ui16(:person)
+      sprite.draw(@screen_x - (tw + 4 + 18), ty)
 
       minimap_x = sidebar_x
       minimap_y = TILE_SIZE + 5
