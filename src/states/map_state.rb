@@ -2,9 +2,6 @@ java_import org.newdawn.slick.state.BasicGameState
 java_import org.newdawn.slick.Color
 java_import org.newdawn.slick.fills.GradientFill
 java_import org.newdawn.slick.geom.Rectangle
-java_import org.newdawn.slick.TrueTypeFont
-java_import org.newdawn.slick.util.ResourceLoader
-java_import java.awt.Font
 
 module YOGO
   class MapState < BasicGameState
@@ -56,17 +53,12 @@ module YOGO
       @minimap_rect = Color.new(1.0,1.0,1.0,0.8)
       @font_color = Color.new(1.0,1.0,1.0,1.0)
 
-
-      input = ResourceLoader.getResourceAsStream("data/fonts/Arimo-Regular.ttf");
-      font = Font.createFont(Font::TRUETYPE_FONT, input)
-      font = font.deriveFont(14.0)
-      @font = TrueTypeFont.new(font, false)
-
-      @line_height = @font.getHeight('Thequickbrownfox')
+      @default_font = @ui_handler.fonts.default
+      @line_height = @default_font.getHeight('Thequickbrownfox')
     end
 
     def render(container, game, graphics)
-      graphics.set_font(@font)
+      graphics.set_font(@default_font)
       if @world.generating? then
         draw_sidebar(graphics)
         graphics.set_color(@font_color)
@@ -79,6 +71,7 @@ module YOGO
 
       @ui_handler.render(container, graphics)
 
+      graphics.set_font(@default_font)
       graphics.draw_string("(ESC to exit)", 8, container.height - 30)
     end
 
@@ -128,6 +121,10 @@ module YOGO
       if keycode == Input::KEY_F2 then
         @minimap_mode = :countries
         reset_minimap
+      end
+
+      if keycode == Input::KEY_F9 then
+        @ui_handler.critical('YOWZERS!')
       end
 
       if @current_selected then
@@ -412,7 +409,7 @@ module YOGO
       return if @current_selected.nil?
 
       data_x = @screen_x - SIDEBAR_WIDTH + 5
-      data_y = MINIMAP_WIDTH + 5
+      data_y = MINIMAP_WIDTH + 5 + TILE_SIZE
 
       text_x = data_x + 5 + TILE_SIZE
 
@@ -439,7 +436,7 @@ module YOGO
         # Draw out the structures we can construct here
         @current_selected.valid_structures.each_with_index do |type, idx|
           vx = buttons_x
-          vy = buttons_y + (idx * (TILE_SIZE + 5 + @line_height))
+          vy = buttons_y + (idx * (TILE_SIZE + 2 + @line_height))
 
           key = KEYS.find { |k, s| s.include?(type) }
 

@@ -1,4 +1,5 @@
 require 'yogo/ui/tileset'
+require 'yogo/ui/fonts'
 
 module YOGO
   module UI
@@ -9,17 +10,25 @@ module YOGO
 
       attr_accessor :active
       attr_reader :text
+      attr_accessor :game
 
       def initialize
+        @game = nil
         @text = []
         @list = []
+        @critical = []
         @active = false
         @font_color = Color.new(1.0, 1.0, 1.0, 1.0)
+        @critical_color = Color.new(1.0, 0.3, 0.3, 1.0)
         @timer = 0.0
       end
 
       def tileset
         @tileset ||= YOGO::UI::Tileset.new
+      end
+
+      def fonts
+        @font ||= YOGO::UI::Fonts.new
       end
 
       def update(container, delta)
@@ -39,17 +48,15 @@ module YOGO
           @timer = 0.0
         end
 
-        @list.each do |data|
-          data[1] -= delta
-        end
-
-        @list.reject! { |data| data[1] < 0.0 }
+        expire_message_list(@list, delta)
+        expire_message_list(@critical, delta)
       end
 
       def render(container, graphics)
         vx = 20
         vy = 20
 
+        graphics.set_font(fonts.default)
         @list.each do |data|
           message = data[0]
           if data[1] < 2000.0 then
@@ -61,6 +68,23 @@ module YOGO
           graphics.draw_string(message, vx, vy)
           vy += 16
         end
+
+        @huge_height ||= fonts.huge.getHeight('Thequickbrownfox')
+        ch = @critical.length * (@huge_height + 5)
+        cy = (container.height / 2) - (ch / 2)
+        @critical.each do |data|
+          message = data[0]
+          if data[1] < 2000.0 then
+            i = data[1] / 2000.00
+          else
+            i = 1.0
+          end
+          graphics.set_font(fonts.huge)
+          graphics.set_color(@critical_color.multiply(Color.new(1.0, 1.0, 1.0, i)))
+          graphics.draw_string(message, (container.width/2) - (fonts.huge.get_width(message)/2), cy)
+          cy += @huge_height + 5
+        end
+        graphics.set_font(fonts.default)
       end
 
       def turn!
@@ -84,6 +108,19 @@ module YOGO
         # TODO: Show a history item that takes you to this spot
         puts message
         @text << message
+      end
+
+      def critical(message)
+        @critical << [ message, TEXT_SHOW_TIME * 2 ]
+      end
+
+    private
+
+      def expire_message_list(array, delta)
+        array.each do |data|
+          data[1] -= delta
+        end
+        array.reject! { |data| data[1] < 0.0 }
       end
 
     end

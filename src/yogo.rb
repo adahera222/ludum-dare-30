@@ -24,6 +24,7 @@ module YOGO
 
     def initialize(name)
       @ui_handler = UI::Handler.new
+      @ui_handler.game = self
 
       @world = World.new
       @world.ui_handler = @ui_handler
