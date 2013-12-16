@@ -10,6 +10,15 @@ module YOGO
       :power => 0.4
     }
 
+    COMMODITY_NAMES = {
+      :iron => 'Iron',
+      :coal => 'Coal',
+      :oil => 'Oil',
+      :food => 'Food',
+      :steel => 'Steel',
+      :power => 'Power'
+    }
+
 
     attr_reader :stocks
 

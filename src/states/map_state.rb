@@ -10,6 +10,7 @@ module YOGO
     SCROLL_SPEED = 0.25
     SIDEBAR_WIDTH = 280
     MINIMAP_WIDTH = SIDEBAR_WIDTH
+    OVERLAY_WIDTH = 300
 
     KEYS = {
       'm' => [ :iron_mine, :coal_mine, :well ],
@@ -55,6 +56,9 @@ module YOGO
 
       @default_font = @ui_handler.fonts.default
       @line_height = @default_font.getHeight('Thequickbrownfox')
+
+      @stock_overlay = false
+      @overlay_background = Color.new(0.0,0.0,0.0,0.8)
     end
 
     def render(container, game, graphics)
@@ -67,6 +71,10 @@ module YOGO
       else
         draw_map(graphics)
         draw_sidebar(graphics)
+
+        if @stock_overlay then
+          draw_stock_overlay(graphics)
+        end
       end
 
       @ui_handler.render(container, graphics)
@@ -115,6 +123,7 @@ module YOGO
         end
 
         if keycode == Input::KEY_F1 then
+          @stock_overlay = !@stock_overlay
         end
 
         if keycode == Input::KEY_F2 then
@@ -518,7 +527,28 @@ module YOGO
         end
 
       end
+    end
 
+    def draw_stock_overlay(graphics)
+      graphics.set_color(@overlay_background)
+      graphics.fill_rect(50,@screen_y / 2,OVERLAY_WIDTH,(@screen_y / 2) - 50)
+
+      vx = 54
+      vy = (@screen_y / 2) + 4
+
+
+      graphics.set_color(@font_color)
+      if @world.market.stocks.keys.length == 0 then
+        graphics.draw_string("Commodity prices are available next turn", vx, vy)
+        vy += 20
+      else
+        @world.market.stocks.keys.each do |c|
+          graphics.draw_string("#{Market::COMMODITY_NAMES[c]} @ #{sprintf('$%.3fm', @world.market.price(c))}", vx, vy)
+          vy += 15
+          graphics.draw_string("Stockpiled: #{@world.market.available(c)} #{sprintf('%+d', -@world.market.live_demand[c])}", vx, vy)
+          vy += 20
+        end
+      end
     end
 
   end
