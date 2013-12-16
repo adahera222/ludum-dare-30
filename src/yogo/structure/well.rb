@@ -9,7 +9,7 @@ module YOGO
       end
 
       def self.description
-        "+5 oil"
+        "+1 oil"
       end
 
       def self.valid_tile?(tile)
@@ -17,7 +17,7 @@ module YOGO
       end
 
       def self.setup_cost
-        5
+        8
       end
 
       def self.running_cost
