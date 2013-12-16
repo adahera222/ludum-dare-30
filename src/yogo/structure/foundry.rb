@@ -1,48 +1,48 @@
 require 'yogo/structure/base'
-
+require 'yogo/structure/coal_power_station'
 module YOGO
   module Structure
-    class CoalPowerStation < Base
+    class Foundry < Base
 
       def self.name
-        "Coal Power Station"
+        "Steel Foundry"
       end
 
       def self.description
-        "5 coal -> 10 power"
+        "5 coal, iron, power -> 5 steel"
       end
 
       def self.valid_tile?(tile)
-        tile.terrain != :water
+        !([ :water, :mountains ].include?(tile.terrain))
       end
 
       def self.setup_cost
-        13
+        25
       end
 
       def self.running_cost
-        2.0
+        3.0
       end
 
       def self.produces
-        { :power => 10 }
-      end
-
-      def production
-        { :power => 10 * @production }
+        { :steel => 5 }
       end
 
       def consumes
-        { :coal => 5 }
+        { :coal => 5, :iron => 5, :power => 5 }
+      end
+
+      def production
+        { :steel => 5 * @production }
       end
 
       def causes
-        { :air_pollution => 0.15 * @production,
-          :water_pollution => 0.005 * @production
+        { :air_pollution => 0.2 * @production,
+          :water_pollution => 0.010 * @production
         }
       end
 
-      # TODO: Extract to a Concern along with Foundry
+      # TODO: Extract to a Concern along with CoalPowerStation
       def update(world)
         cs = self.consumes
         cs.each do |commodity, quantity|

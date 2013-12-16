@@ -233,8 +233,10 @@ module YOGO
         puts "CURRENT: #{demand.inspect}"
 
         # TODO: Pick the greatest, above zero demand
-        demand.reject { |key, value| value <= 0.0 }
+        demand.reject! { |key, value| value <= 0.0 }
         commodity = demand.to_a.sort_by { |el| el[1] }.last
+
+        puts "FILTERED: #{demand.inspect}"
 
         if commodity.nil? then
           # TODO: Break out if all demands are met, and set @opponents_generated = true
@@ -265,9 +267,9 @@ module YOGO
         when :oil
           find_and_build(:well, entity)
         when :coal
-          find_and_build(:mine, :coal, entity)
+          find_and_build(:mine, entity, :coal)
         when :iron
-          find_and_build(:mine, :iron, entity)
+          find_and_build(:mine, entity, :iron)
         when :steel
           find_and_build(:foundry, entity)
         else

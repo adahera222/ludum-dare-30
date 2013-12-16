@@ -7,6 +7,7 @@ require 'yogo/structure/coal_power_station'
 require 'yogo/structure/oil_power_station'
 require 'yogo/structure/nuclear_plant'
 require 'yogo/structure/wind_farm'
+require 'yogo/structure/foundry'
 
 module YOGO
   module Structure
@@ -21,6 +22,7 @@ module YOGO
       :oil_power_station => OilPowerStation,
       :nuclear_plant => NuclearPlant,
       :wind_farm => WindFarm,
+      :foundry => Foundry,
     }
   end
 end
